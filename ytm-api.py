@@ -136,7 +136,7 @@ def main():
           )
           ytm['stocks'].append(item)
 
-    with open('public/scripts/ytm-stock.js', 'w', encoding='utf-8') as f:
+    with open('frontend/scripts/ytm-stock.js', 'w', encoding='utf-8') as f:
         f.write('const YTMS = ')
         json.dump(ytms, f, ensure_ascii=False)
         f.write(f'\nconst UPDATED_AT = {datetime.datetime.now().timestamp()}')
