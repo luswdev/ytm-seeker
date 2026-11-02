@@ -22,7 +22,7 @@ const mainVue = createApp({
       ytms: YTMS,
       products: PRODUCTS,
       updated: UPDATED_AT,
-      showOnlyRemain: false,
+      showEmptyYTM: false,
       resloveYtms: YTMS,
       region: 'all',
       showFilter: true,
@@ -31,11 +31,6 @@ const mainVue = createApp({
   methods: {
     triggerFilterBlock: function () {
       this.showFilter = !this.showFilter
-    },
-    triggerShowOnlyRemain: function () {
-      this.showOnlyRemain = !this.showOnlyRemain
-      this.updateList()
-      Cookies.set('showOnlyRemain', this.showOnlyRemain)
     },
     triggerProductFilter: function (key) {
       this.products.forEach((prod) => {
@@ -51,10 +46,17 @@ const mainVue = createApp({
       Cookies.set('productFilter', key)
     },
     resetFilters: function () {
-      this.showOnlyRemain = false
+      this.region = 'all'
+      this.showEmptyYTM = false
       this.products.forEach((prod) => {
         prod.enable = false
       })
+
+      this.updateList()
+
+      Cookies.remove('regionFilter')
+      Cookies.remove('showEmptyYTM')
+      Cookies.remove('productFilter')
     },
     getProductStyle: function (key) {
       let target = this.products.find((prod) => prod.key === key)
@@ -109,7 +111,7 @@ const mainVue = createApp({
           break;
       }
 
-      if (this.showOnlyRemain) {
+      if (!this.showEmptyYTM) {
         this.resloveYtms = this.resloveYtms.filter(ytm => ytm.stocks.length > 0)
       }
 
@@ -123,6 +125,10 @@ const mainVue = createApp({
     region: function (newVal) {
       this.updateList()
       Cookies.set('regionFilter', newVal)
+    },
+    showEmptyYTM: function (newVal) {
+      this.updateList()
+      Cookies.set('showEmptyYTM', newVal)
     }
   },
   mounted: function () {
@@ -132,7 +138,7 @@ const mainVue = createApp({
     }
 
     this.region = Cookies.get('regionFilter') ? Cookies.get('regionFilter') : 'all'
-    this.showOnlyRemain = Cookies.get('showOnlyRemain') === 'true'
+    this.showEmptyYTM = Cookies.get('showEmptyYTM') === 'true'
     let productFilter = Cookies.get('productFilter')
     if (productFilter) {
       let prod = this.products.find((p) => p.key === productFilter)

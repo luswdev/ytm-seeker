@@ -92,20 +92,19 @@
                 <option value="direct">門市</option>
               </select>
             </div>
+            <div class="flex gap-1">
+              <input type="checkbox" name="showEmptyYTM" value="showEmptyYTM" v-model="showEmptyYTM">
+              <label for="showEmptyYTM" class="text-sm text-zinc-300">顯示沒有庫存的 YTM</label>
+            </div>
             <div class="option-filter flex flex-wrap gap-1 mt-2">
-              <span class="rounded-full border-1 border-zinc-300/20 text-zinc-300/20 text-sm px-2 cursor-pointer"
-                :class="showOnlyRemain ? 'bg-rose-300 border-rose-300 text-zinc-800 hover:border-red-700 hover:bg-zinc-900 hover:text-red-700' : 'border-zinc-300/20 text-zinc-300/20 hover:border-rose-300 hover:text-rose-300' "
-                @click="triggerShowOnlyRemain">
-                僅顯示尚有庫存
-              </span>
               <span v-for="prod in products" class="rounded-full text-sm px-2 cursor-pointer border-1"
                 :class="prod.enable ? prod.style + ' hover:border-red-700 hover:bg-zinc-900 hover:text-red-700' : 'border-zinc-300/20 text-zinc-300/20 hover:border-rose-300 hover:text-rose-300' "
                 @click="triggerProductFilter(prod.key)">
                 {{prod.name}}
               </span>
             </div>
-            <div>
-              <span class="text-sm text-zinc-600 cursor-pointer hover:text-rose-300" @click="resetFilters">清除選擇</span>
+            <div class="flex justify-end">
+              <span class="text-sm text-zinc-600 cursor-pointer hover:text-rose-300" @click="resetFilters">清除篩選條件</span>
             </div>
           </div>
         </div>
