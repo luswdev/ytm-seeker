@@ -9,8 +9,8 @@ fi
 rm -rvf public
 cp -avf frontend public
 
+tailwindcss-cli -i ./frontend/styles/main.css -o ./public/styles/main.css
+
 version=$(date +%s)
 
 sed "s/VER_TAG/$version/g" ./frontend/index.html > ./public/index.html
-
-tailwindcss-cli -i ./frontend/styles/main.css -o ./public/styles/main.css
