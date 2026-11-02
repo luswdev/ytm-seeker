@@ -59,7 +59,10 @@
               </span>
             </div>
             <div v-for="ytm in resloveYtms" class="bg-zinc-900 rounded-lg p-2">
-              <h2 class="font-serif text-xl font-bold">{{ytm.name}}</h2>
+              <h2 class="font-serif text-xl font-bold flex gap-1 items-center">
+                <img v-if="getMrtIcon(ytm.name)" :src="getMrtIcon(ytm.name)" class="inline-block w-5 h-5 mr-1">
+                {{ytm.name}}
+              </h2>
               <span v-if="ytm.address" class="text-xs text-zinc-500">{{ytm.address}}</span>
               <div class="remain-container flex flex-wrap gap-1 mt-3">
                 <div v-if="!ytm.stocks.length" class="font-style text-zinc-300">
@@ -108,9 +111,13 @@
 
   <footer id="footer">
     <div id="footer-inner" class="flex flex-col justify-center items-center mb-3 gap-y-2 max-w-screen-xl mx-auto">
-      <p class="text-zinc-400/75 text-sm text-center font-style">
-        &copy {{ year }} LuSkywalker. 相關資訊歸屬於
-        <a target="_blank" href="https://www.yannick.com.tw/" class="text-rose-300 hover:underline">亞尼克</a>官方.
+      <p class="border-1 border-zinc-300/20 rounded-xl px-3 py-2 text-sm font-style text-zinc-400 mx-2 md:mx-0">
+        <i class="fa-regular fa-circle-question"></i>
+        本網站每 10 分鐘會自動更新 YTM 庫存資訊，相關資訊歸屬於
+        <a target="_blank" href="https://www.yannick.com.tw/" class="text-rose-300 hover:underline">亞尼克</a>官方。
+      </p>
+      <p class="text-zinc-400/75 text-sm text-center font-mono">
+        &copy {{ year }} LuSkywalker.
       </p>
     </div>
   </footer>

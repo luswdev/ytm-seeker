@@ -67,6 +67,31 @@ const mainVue = createApp({
       let target = this.products.find((prod) => prod.key === key)
       return target.name
     },
+    getMrtIcon: function (name) {
+      mrt = ''
+      if (name.split('-').length > 1) {
+        mrt = name.split('-')[0]
+      }
+
+      switch (mrt) {
+        case '環狀線':
+          return '/assets/icons/tpe-mrt/y.svg'
+        case '松山新店線':
+          return '/assets/icons/tpe-mrt/g.svg'
+        case '中和新蘆線':
+          return '/assets/icons/tpe-mrt/o.svg'
+        case '文湖線':
+          return '/assets/icons/tpe-mrt/br.svg'
+        case '板南線':
+          return '/assets/icons/tpe-mrt/bl.svg'
+        case '淡水信義線':
+          return '/assets/icons/tpe-mrt/r.svg'
+        case '紅線':
+          return '/assets/icons/kh-mrt/r.svg'
+      }
+
+      return ''
+    },
     getUpdated: function () {
       let date = new Date(this.updated * 1000)
       let pad = (num) => String(num).padStart(2, '0')
