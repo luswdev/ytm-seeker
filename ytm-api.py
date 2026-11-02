@@ -103,6 +103,14 @@ ytms = [
     dict( name='台北西門店', key='F638C3E205B6E6', address='台北市萬華區成都路18號', region='direct' ),
 ]
 
+known_products = [
+    dict( name='原味', key='31Z021079', style='bg-zinc-700 border-zinc-700 text-zinc-300', enable=False ),
+    dict( name='盲盒', key='31Z051013', style='bg-red-700 border-red-700 text-zinc-300', enable=False ),
+    dict( name='喀麥隆脆皮黑巧', key='31Z021370', style='bg-taupe-600 border-taupe-600 text-zinc-300', enable=False ),
+    dict( name='BUBU切片組', key='31Z011082', style='bg-sky-700 border-sky-700 text-zinc-300', enable=False ),
+    dict( name='三顆布丁', key='31Z021368', style='bg-amber-500 border-amber-500 text-zinc-800', enable=False ),
+]
+
 API='https://www.yannick.com.tw/_zh-cht/ajaxTYTMStock.ashx'
 
 def get_stock(ytm):
@@ -129,26 +137,49 @@ def main():
         level  = logging.INFO,
     )
 
+    products = []
+
     for ytm in ytms:
         logging.info(f'get {ytm["name"]} stock...')
         stocks = get_stock(ytm)
         ytm['stocks'] = []
         for stock in stocks['Result']['StockList']:
-          item = dict(
-            name = stock['commodityName'],
-            real_name = stock['ProductName'],
-            key = stock['commodityCode'],
-            quantity = stock['quantity'],
-          )
-          ytm['stocks'].append(item)
+            item = dict(
+              name = stock['commodityName'],
+              real_name = stock['ProductName'],
+              key = stock['commodityCode'],
+              quantity = stock['quantity'],
+            )
+            ytm['stocks'].append(item)
+
+            is_new_product = not any(
+                prod['key'] == stock['commodityCode']
+                for prod in products
+            )
+
+            if is_new_product:
+                matches = (x for x in known_products if x['key'] == stock['commodityCode'])
+                match = next(matches, None)
+                if match:
+                    products.append(match)
+                else:
+                    products.append(dict(
+                        name = stock['commodityName'],
+                        key = stock['commodityCode'],
+                        style = 'bg-zinc-700 border-zinc-700 text-zinc-300',
+                        enable = False,
+                    ))
+
+                logging.info(f'new product: {stock["commodityName"]}')
 
     with open('frontend/scripts/ytm-stock.js', 'w', encoding='utf-8') as f:
         f.write('const YTMS = ')
         json.dump(ytms, f, ensure_ascii=False)
         f.write(f'\nconst UPDATED_AT = {datetime.datetime.now().timestamp()}')
 
-    with open('stock.json', 'w', encoding='utf-8') as f:
-        json.dump(ytms, f, indent=4, ensure_ascii=False)
+    with open('frontend/scripts/ytm-products.js', 'w', encoding='utf-8') as f:
+        f.write('const PRODUCTS = ')
+        json.dump(products, f, ensure_ascii=False)
 
 if __name__ == '__main__':
     main()

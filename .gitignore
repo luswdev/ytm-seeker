@@ -6,4 +6,4 @@
 public/
 
 *.json
-frontend/scripts/ytm-stock.js
+frontend/scripts/ytm-*.js
