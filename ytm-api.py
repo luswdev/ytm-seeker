@@ -5,6 +5,7 @@ import json
 from io import BytesIO
 from urllib.parse import urlencode
 import datetime
+import logging
 
 ytms = [
     # ytms in taipei mrt
@@ -123,8 +124,13 @@ def get_stock(ytm):
     return data
 
 def main():
+    logging.basicConfig(
+        format = '%(levelname)s - %(message)s',
+        level  = logging.INFO,
+    )
+
     for ytm in ytms:
-        print(f'get {ytm["name"]} stock...')
+        logging.info(f'get {ytm["name"]} stock...')
         stocks = get_stock(ytm)
         ytm['stocks'] = []
         for stock in stocks['Result']['StockList']:
