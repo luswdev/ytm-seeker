@@ -1,8 +1,10 @@
 #!/bin/bash
 
-. ./.venv/bin/activate
-./ytm-api.py
-deactivate
+if [ -z "$1" ]; then
+  . ./.venv/bin/activate
+  ./ytm-api.py
+  deactivate
+fi
 
 rm -rvf public
 cp -avf frontend public
@@ -10,3 +12,5 @@ cp -avf frontend public
 version=$(date +%s)
 
 sed "s/VER_TAG/$version/g" ./frontend/index.html > ./public/index.html
+
+tailwindcss-cli -i ./frontend/styles/main.css -o ./public/styles/main.css
