@@ -34,6 +34,8 @@ const mainVue = createApp({
       resloveYtms: YTMS,
       region: 'all',
       showFilter: true,
+      showMap: false,
+      showMapYtm: undefined,
     }
   },
   methods: {
@@ -127,7 +129,33 @@ const mainVue = createApp({
       if (productFilter) {
         this.resloveYtms = this.resloveYtms.filter(ytm => ytm.stocks.some(stock => stock.key === productFilter.key))
       }
-    }
+    },
+    showMapModal: function (ytm) {
+      this.showMapYtm = ytm
+      this.showMap = true
+      document.body.classList.add('overflow-hidden')
+    },
+    closeMapModal: function () {
+      document.body.classList.remove('overflow-hidden')
+      this.showMap = false
+    },
+    getYtmMap: function (ytm) {
+      if (!ytm) {
+        return ''
+      }
+
+      switch (ytm.region) {
+        case 'tpe-mrt':
+          line = ytm.name.split('-')[0]
+          station = ytm.name.split('-')[1]
+          switch (line) {
+            case '板南線':
+              return encodeURI(`https://photo.yannick.com.tw/0.YTM查詢-1-捷運路線圖-${station}.jpg`)
+            default:
+              return encodeURI(`https://photo.yannick.com.tw/photo/YTM2/0.YTM查詢-1-捷運路線圖-${station}.jpg`)
+          }
+      }
+    },
   },
   watch: {
     region: function (newVal) {
