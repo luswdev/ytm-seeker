@@ -127,15 +127,19 @@
         &copy {{ year }} LuSkywalker v{{version}}.
       </p>
     </div>
-  </footer>
 
-  <div class="sponsor-container fixed bottom-4 right-4">
-    <a href="https://ko-fi.com/luswdev" target="_blank"
-      class="flex items-center justify-center rounded-full transition-all delay-100 bg-rose-300 text-zinc-800 w-[2rem] h-[2rem] group hover:w-auto hover:px-3 gap-1">
-      <img src="https://storage.ko-fi.com/cdn/cup-border.png" alt="ko-fi" class="h-[1rem]">
-      <span class="font-semibold hidden group-hover:inline-block">贊助我們</span>
-    </a>
-  </div>
+    <div class="flex flex-col gap-2 fixed bottom-4 right-4">
+      <a v-if="!isTop" href="#"
+        class="flex items-center justify-center rounded-full transition-all delay-100 bg-yannick text-zinc-200 w-[2rem] h-[2rem] group gap-1 hover:bg-yannick/80">
+        <i class="fa-solid fa-arrow-up-long"></i>
+      </a>
+      <a href="https://ko-fi.com/luswdev" target="_blank"
+        class="flex items-center justify-center rounded-full transition-all delay-100 bg-yannick text-zinc-200 w-[2rem] h-[2rem] group hover:w-auto hover:px-3 gap-1">
+        <img src="https://storage.ko-fi.com/cdn/cup-border.png" alt="ko-fi" class="h-[1rem]">
+        <span class="font-semibold hidden group-hover:inline-block">贊助我們</span>
+      </a>
+    </div>
+  </footer>
 
   <script src="scripts/ytm-stock.js?v=_VER_TAG"></script>
   <script src="scripts/ytm-products.js?v=_VER_TAG"></script>

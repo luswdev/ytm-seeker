@@ -13,7 +13,14 @@ const footerVue = createApp({
     return {
       year: new Date().getFullYear(),
       version: '1.0.3',
+      isTop: true
     }
+  },
+  mounted: function () {
+    this.isTop = window.scrollY <= 0
+    window.addEventListener('scroll', () => {
+      this.isTop = window.scrollY <= 0
+    })
   },
 }).mount('#footer')
 
