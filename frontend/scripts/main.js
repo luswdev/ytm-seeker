@@ -12,6 +12,7 @@ const footerVue = createApp({
   data: function () {
     return {
       year: new Date().getFullYear(),
+      version: '1.0.3',
     }
   },
 }).mount('#footer')
