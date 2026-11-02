@@ -115,5 +115,7 @@ const mainVue = createApp({
         prod.enable = true
       }
     }
+
+    this.updateList()
   },
 }).mount('#main')
