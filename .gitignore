@@ -1,0 +1,9 @@
+.vs/
+.vscode/
+
+*env/
+
+public/
+
+*.json
+frontend/scripts/ytm-stock.js

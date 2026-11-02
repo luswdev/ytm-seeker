@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="dark">
+
+<head>
+  <title>亞尼克 YTM 查詢機</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes" />
+  <meta name="theme-color" content="#FFFFFF" />
+
+  <script src="https://kit.fontawesome.com/7205443a15.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.8/dist/js.cookie.min.js"></script>
+
+  <link rel="stylesheet" href="/styles/out.css?v=_VER_TAG">
+</head>
+
+<body
+  class="flex flex-col gap-3 min-h-screen bg-zinc-100 dark:bg-neutral-950 text-black dark:text-white max-w-4xl mx-auto">
+  <header id="header">
+    <div class="header-inner mt-3">
+      <div class="flex justify-between px-3 md:px-0">
+        <h1 class="font-title font-black text-4xl">
+          <span class="text-rose-300">YTM</span>
+          <span>查詢機</span>
+        </h1>
+        <a href="https://www.yannick.com.tw/ytm/service2" target="_blank" class="px-3 py-1 hover:text-rose-300">
+          <i class="fa-solid fa-person-walking-arrow-loop-left"></i>
+          手刀預訂
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="grow flex" id="main">
+    <div class="main-inner container flex flex-col">
+      <div class="flex justify-end gap-2 px-2">
+        <div class="flex gap-1 items-center text-zinc-600 text-sm">
+          <i class="fa-regular fa-clock"></i>
+          <span>最後更新於 {{getUpdated()}}</span>
+        </div>
+        <div
+          class="flex justify-center items-center rounded-full w-[1.5rem] h-[1.5rem] hover:bg-rose-300/80 hover:text-zinc-800"
+          :class="showFilter ? 'bg-rose-300 text-zinc-800 ' : 'text-zinc-500 bg-zinc-800 '" @click="triggerFilterBlock">
+          <i class="fa-solid fa-filter text-xs"></i>
+        </div>
+      </div>
+      <div class="flex">
+        <div class="flex flex-col md:grid! md:grid-cols-4! gap-2 grow">
+          <div class="flex flex-col gap-3 px-2 py-3" :class="showFilter ? 'col-span-3' : 'col-span-4' ">
+            <div v-if="!resloveYtms.length" class="flex flex-col gap-5 justify-center items-center">
+              <span class="font-title text-8xl text-zinc-600">:(</span>
+              <span class="font-style">沒有符合條件的 YTM</span>
+            </div>
+            <div v-else class="flex justify-end text-zinc-500 text-sm font-style">
+              <span>
+                一共有 {{resloveYtms.length}} 台 YTM 符合條件
+              </span>
+            </div>
+            <div v-for="ytm in resloveYtms" class="bg-zinc-900 rounded-lg p-2">
+              <h2 class="font-serif text-xl font-bold">{{ytm.name}}</h2>
+              <span v-if="ytm.address" class="text-xs text-zinc-500">{{ytm.address}}</span>
+              <div class="remain-container flex flex-wrap gap-1 mt-3">
+                <div v-if="!ytm.stocks.length" class="font-style text-zinc-300">
+                  本站沒有庫存!
+                </div>
+                <span v-for="stock in ytm.stocks">
+                  <span :class="getProductStyle(stock.key)" class="rounded-full text-sm px-2">
+                    {{getProductName(stock.key)}}&nbsp
+                    <span class="font-mono">{{stock.quantity}}</span>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div v-if="showFilter"
+            class="col-span-1 px-2 py-3 flex flex-col gap-1 order-first md:order-last border-1 border-zinc-300/20 md:border-0 mx-2 rounded-md md:mx-0 mt-2 md:mt-0 shadow-[0_0_40px] shadow-gray-500/25 md:shadow-none">
+            <div class="region-filter flex flex-col gap-1">
+              <span>搜尋範圍</span>
+              <select class="w-full rounded-lg bg-zinc-800 text-zinc-300 px-2 py-1" v-model="region">
+                <option value="all">全部</option>
+                <option value="tpe-mrt">台北捷運</option>
+                <option value="kh-mrt">高雄捷運</option>
+                <option value="direct">門市</option>
+              </select>
+            </div>
+            <div class="option-filter flex flex-wrap gap-1 mt-2">
+              <span class="rounded-full border-1 border-zinc-300/20 text-zinc-300/20 text-sm px-2 cursor-pointer"
+                :class="showOnlyRemain ? 'bg-rose-300 border-rose-300 text-zinc-800 hover:border-red-700 hover:bg-zinc-900 hover:text-red-700' : 'border-zinc-300/20 text-zinc-300/20 hover:border-rose-300 hover:text-rose-300' "
+                @click="triggerShowOnlyRemain">
+                僅顯示尚有庫存
+              </span>
+              <span v-for="prod in products" class="rounded-full text-sm px-2 cursor-pointer border-1"
+                :class="prod.enable ? prod.style + ' hover:border-red-700 hover:bg-zinc-900 hover:text-red-700' : 'border-zinc-300/20 text-zinc-300/20 hover:border-rose-300 hover:text-rose-300' "
+                @click="triggerProductFilter(prod.key)">
+                {{prod.name}}
+              </span>
+            </div>
+            <div>
+              <span class="text-sm text-zinc-600 cursor-pointer hover:text-rose-300" @click="resetFilters">清除選擇</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="footer">
+    <div id="footer-inner" class="flex flex-col justify-center items-center mb-3 gap-y-2 max-w-screen-xl mx-auto">
+      <p class="text-zinc-400/75 text-sm text-center font-style">
+        &copy {{ year }} LuSkywalker. 相關資訊歸屬於
+        <a target="_blank" href="https://www.yannick.com.tw/" class="text-rose-300 hover:underline">亞尼克</a>官方.
+      </p>
+    </div>
+  </footer>
+
+  <div class="sponsor-container fixed bottom-4 right-4">
+    <a href="https://ko-fi.com/luswdev" target="_blank"
+      class="flex items-center justify-center rounded-full transition-all delay-100 bg-rose-300 text-zinc-800 w-[2rem] h-[2rem] group hover:w-auto hover:px-3 gap-1">
+      <img src="https://storage.ko-fi.com/cdn/cup-border.png" alt="ko-fi" class="h-[1rem]">
+      <span class="font-semibold hidden group-hover:inline-block">贊助我們</span>
+    </a>
+  </div>
+
+  <script src="scripts/ytm-stock.js?v=_VER_TAG"></script>
+  <script src="scripts/ytm-products.js?v=_VER_TAG"></script>
+  <script src="scripts/main.js?v=_VER_TAG"></script>
+</body>
+
+</html>
