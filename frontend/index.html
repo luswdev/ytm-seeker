@@ -40,9 +40,15 @@
   <main class="grow flex" id="main">
     <div class="main-inner container flex flex-col">
       <div class="flex justify-end gap-2 px-2">
-        <div class="flex gap-1 items-center text-zinc-600 text-sm">
-          <i class="fa-regular fa-clock"></i>
-          <span>最後更新於 {{getUpdated()}}</span>
+        <div v-if="!resloveYtms.length" class="flex flex-col gap-5 justify-center items-center grow">
+          <span class="font-title text-8xl text-zinc-600">:(</span>
+          <span class="font-style">沒有符合條件的 YTM</span>
+          <span class="text-sm text-zinc-600 border-1 border-zinc-300/20 rounded-full cursor-pointer hover:text-yannick hover:border-yannick px-3 py-2" @click="resetFilters">清除篩選條件</span>
+        </div>
+        <div v-else class="flex justify-end text-zinc-500 text-sm font-style">
+          <span>
+            一共有 {{resloveYtms.length}} 台 YTM 符合條件
+          </span>
         </div>
         <div
           class="flex justify-center items-center rounded-full w-[1.5rem] h-[1.5rem] hover:bg-yannick/80 hover:text-zinc-200"
@@ -53,16 +59,6 @@
       <div class="flex grow">
         <div class="flex flex-col md:grid! md:grid-cols-4! gap-2 grow">
           <div class="flex flex-col gap-3 px-2 py-3 grow" :class="showFilter ? 'col-span-3' : 'col-span-4' ">
-            <div v-if="!resloveYtms.length" class="flex flex-col gap-5 justify-center items-center grow">
-              <span class="font-title text-8xl text-zinc-600">:(</span>
-              <span class="font-style">沒有符合條件的 YTM</span>
-              <span class="text-sm text-zinc-600 border-1 border-zinc-300/20 rounded-full cursor-pointer hover:text-yannick hover:border-yannick px-3 py-2" @click="resetFilters">清除篩選條件</span>
-            </div>
-            <div v-else class="flex justify-end text-zinc-500 text-sm font-style">
-              <span>
-                一共有 {{resloveYtms.length}} 台 YTM 符合條件
-              </span>
-            </div>
             <div v-for="ytm in resloveYtms" class="bg-zinc-900 rounded-lg p-2">
               <h2 class="font-serif text-xl font-bold flex gap-1 items-center">
                 <img v-if="getMrtIcon(ytm.name)" :src="getMrtIcon(ytm.name)" class="inline-block w-5 h-5 mr-1">
@@ -81,11 +77,19 @@
                 </span>
               </div>
             </div>
+            <div class="flex gap-1 items-center justify-end text-zinc-600 text-sm">
+              <i class="fa-regular fa-clock"></i>
+              <span>最後更新於 {{getUpdated()}}</span>
+            </div>
           </div>
           <div v-if="showFilter"
             class="col-span-1 px-2 py-3 flex flex-col gap-2 order-first md:order-last border-1 border-zinc-300/20 md:border-0 mx-2 rounded-md md:mx-0 mt-2 md:mt-0 shadow-[0_0_40px] shadow-gray-500/25 md:shadow-none">
+            <h3 class="text-2xl font-bold">
+              <i class="fa-solid fa-gear text-zinc-500 mb-2"></i>
+              進階篩選
+            </h3>
             <div class="region-filter flex flex-col gap-1">
-              <span class="font-semibold">搜尋範圍</span>
+              <span class="font-semibold">篩選範圍</span>
               <select class="w-full rounded-lg bg-zinc-800 text-zinc-300 px-2 py-1" v-model="region">
                 <option value="all">全部</option>
                 <option value="tpe-mrt">台北捷運</option>
@@ -95,7 +99,7 @@
             </div>
             <div class="flex gap-1">
               <input type="checkbox" name="showEmptyYTM" value="showEmptyYTM" v-model="showEmptyYTM">
-              <label for="showEmptyYTM" class="text-sm text-zinc-300">顯示沒有庫存的 YTM</label>
+              <label for="showEmptyYTM" class="text-sm text-zinc-300">顯示 0 庫存的 YTM</label>
             </div>
             <div class="option-filter flex flex-col gap-1 mt-3">
               <span class="font-semibold">篩選口味</span>
