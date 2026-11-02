@@ -2,7 +2,7 @@ PRODUCTS = [
   {
     'name': '原味',
     'key': '31Z021079',
-    'style': 'bg-pink-300 border-pink-300 text-zinc-800',
+    'style': 'bg-zinc-700 border-zinc-700 text-zinc-300',
     'enable': false,
   },
   {
@@ -14,13 +14,13 @@ PRODUCTS = [
   {
     'name': '喀麥隆脆皮黑巧生乳捲',
     'key': '31Z021370',
-    'style': 'bg-stone-800 border-stone-800 text-zinc-300',
+    'style': 'bg-taupe-600 border-taupe-600 text-zinc-300',
     'enable': false,
   },
   {
     'name': 'BUBU切片組-常態',
     'key': '31Z011082',
-    'style': 'bg-cyan-300 border-cyan-300 text-zinc-800',
+    'style': 'bg-sky-700 border-sky-700 text-zinc-300',
     'enable': false,
   },
   {
