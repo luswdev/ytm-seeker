@@ -1,12 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Chiron+GoRound+TC:wght@200..900&family=Iansui&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Noto+Sans+TC:wght@100..900&family=Noto+Serif+TC:wght@200..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Chiron+GoRound+TC:wght@200..900&family=Iansui&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Noto+Sans+TC:wght@100..900&family=Noto+Serif+TC:wght@200..900&display=swap");
 @import "tailwindcss";
 
 @theme {
   --font-title: "Chiron GoRound TC", sans-serif;
-  --font-sans:  "Noto Sans TC", sans-serif;
+  --font-sans: "Noto Sans TC", sans-serif;
   --font-serif: "Noto Serif TC", serif;
   --font-style: "Iansui", cursive;
   --font-mono: "JetBrains Mono", monospace;
 
-  --color-yannick: #B83935;
+  --color-yannick: #b83935;
 }

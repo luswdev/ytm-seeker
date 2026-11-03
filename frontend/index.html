@@ -44,9 +44,9 @@
           <span>搜尋範圍:</span>
           <img v-if="filterRegionIcon" :src="'/assets/icons/' + filterRegionIcon" class="inline-block w-5 h-5">
           <span class="text-xl">{{filterRegion}}</span>
-          <div
-            class="flex justify-center items-center rounded-full w-[1.5rem] h-[1.5rem] hover:bg-yannick/80 hover:text-zinc-200"
-            :class="showFilter ? 'bg-yannick text-zinc-200 ' : 'text-zinc-500 bg-zinc-800 '" @click="triggerFilterBlock">
+          <div class="flex justify-center items-center rounded-full w-6 h-6 hover:bg-yannick/80 hover:text-zinc-200"
+            :class="showFilter ? 'bg-yannick text-zinc-200 ' : 'text-zinc-500 bg-zinc-800 '"
+            @click="triggerFilterBlock">
             <i class="fa-solid fa-gear text-sm"></i>
           </div>
         </h2>
@@ -64,7 +64,9 @@
             <div v-if="!resloveYtms.length" class="flex flex-col gap-5 justify-center items-center grow">
               <span class="font-title text-8xl text-yannick">:(</span>
               <span class="font-style">沒有符合條件的 YTM</span>
-              <span class="text-sm text-zinc-600 border-1 border-zinc-300/20 rounded-full cursor-pointer hover:text-yannick hover:border-yannick px-3 py-2" @click="resetFilters">清除篩選條件</span>
+              <span
+                class="text-sm text-zinc-600 border border-zinc-300/20 rounded-full cursor-pointer hover:text-yannick hover:border-yannick px-3 py-2"
+                @click="resetFilters">清除篩選條件</span>
             </div>
             <div v-for="ytm in resloveYtms" class="bg-zinc-900 rounded-lg p-2">
               <h2 class="font-serif text-xl font-bold flex gap-1 items-center">
@@ -76,7 +78,8 @@
               </h2>
               <div class="flex gap-1">
                 <span v-if="ytm.address" class="text-xs text-zinc-500">{{ytm.address}}</span>
-                <span class="text-xs text-zinc-500 underline hover:text-yannick cursor-pointer" @click="showMapModal(ytm)">顯示地圖</span>
+                <span class="text-xs text-zinc-500 underline hover:text-yannick cursor-pointer"
+                  @click="showMapModal(ytm)">顯示地圖</span>
               </div>
               <div class="remain-container flex flex-wrap gap-1 mt-3">
                 <div v-if="!ytm.stocks.length" class="flex gap-2 font-style text-zinc-300">
@@ -97,7 +100,7 @@
             </div>
           </div>
           <div v-if="showFilter"
-            class="col-span-1 px-2 py-3 flex flex-col gap-2 order-first md:order-last border-1 border-zinc-300/20 md:border-0 mx-2 rounded-md md:mx-0 mt-2 md:mt-0 shadow-[0_0_40px] shadow-gray-500/25 md:shadow-none">
+            class="col-span-1 px-2 py-3 flex flex-col gap-2 order-first md:order-last border border-zinc-300/20 md:border-0 mx-2 rounded-md md:mx-0 mt-2 md:mt-0 shadow-[0_0_40px] shadow-gray-500/25 md:shadow-none">
             <h3 class="text-2xl font-bold">
               <i class="fa-solid fa-gear text-zinc-500 mb-2"></i>
               進階篩選
@@ -106,7 +109,7 @@
               <span class="font-semibold">篩選範圍</span>
               <select class="w-full rounded-lg bg-zinc-800 text-zinc-300 px-2 py-1" v-model="region" ref="regionSelect">
                 <option v-for="r in regionList[0].regions" :key="r.value" :value="r.value">
-                    {{ r.name }}
+                  {{ r.name }}
                 </option>
                 <optgroup v-for="item in groupedRegions" :key="item.group" :label="item.group">
                   <option v-for="r in item.regions" :key="r.value" :value="r.value">
@@ -122,7 +125,7 @@
             <div class="option-filter flex flex-col gap-1 mt-3">
               <span class="font-semibold">篩選口味</span>
               <div class="flex flex-wrap gap-1 mt-2">
-                <span v-for="prod in products" class="rounded-full text-sm px-2 cursor-pointer border-1"
+                <span v-for="prod in products" class="rounded-full text-sm px-2 cursor-pointer border"
                   :class="prod.enable ? prod.style + ' hover:border-red-700 hover:bg-zinc-900 hover:text-red-700' : 'border-zinc-300/20 text-zinc-300/20 hover:border-yannick hover:text-yannick' "
                   @click="triggerProductFilter(prod.key)">
                   {{prod.name}}
@@ -130,19 +133,23 @@
               </div>
             </div>
             <div class="flex justify-end">
-              <span class="text-sm text-zinc-600 cursor-pointer hover:text-yannick underline" @click="resetFilters">清除篩選條件</span>
+              <span class="text-sm text-zinc-600 cursor-pointer hover:text-yannick underline"
+                @click="resetFilters">清除篩選條件</span>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div v-if="showMap" class="map-modal fixed top-0 left-0 w-full h-full inset-0 z-50 overflow-y-auto overflow-x-hidden bg-black/80 backdrop-blur-sm flex justify-center items-center"
+    <div v-if="showMap"
+      class="map-modal fixed top-0 left-0 w-full h-full inset-0 z-50 overflow-y-auto overflow-x-hidden bg-black/80 backdrop-blur-sm flex justify-center items-center"
       @click="closeMapModal">
       <div class="map-modal-inner flex justify-center items-center mx-2 md:mx-0">
-        <div class="flex flex-col gap-2 px-5 py-4 border-1 border-zinc-300/20 rounded-lg bg-zinc-900 shadow-[0_0_40px] shadow-gray-500/25">
+        <div
+          class="flex flex-col gap-2 px-5 py-4 border border-zinc-300/20 rounded-lg bg-zinc-900 shadow-[0_0_40px] shadow-gray-500/25">
           <h2 class="text-3xl font-title font-bold">{{ showMapYtm ? showMapYtm.name : '' }}</h2>
           <span class="flex justify-end">
-            <a :href="showMapYtm ? 'https://www.google.com/maps/search/?api=1&query=' + showMapYtm.google_map : ''" target="_blank" class="text-sm text-zinc-300 underline hover:text-yannick cursor-pointer flex gap-1">
+            <a :href="showMapYtm ? 'https://www.google.com/maps/search/?api=1&query=' + showMapYtm.google_map : ''"
+              target="_blank" class="text-sm text-zinc-300 underline hover:text-yannick cursor-pointer flex gap-1">
               <img src="/assets/icons/google-map.svg" class="inline-block w-5 h-5">
               在 Google Map 中打開
             </a>
@@ -156,8 +163,8 @@
   </main>
 
   <footer id="footer">
-    <div id="footer-inner" class="flex flex-col justify-center items-center mb-3 gap-y-2 max-w-screen-xl mx-auto">
-      <p class="border-1 border-zinc-300/20 rounded-xl px-3 py-2 text-sm font-style text-zinc-400 mx-2 md:mx-0">
+    <div id="footer-inner" class="flex flex-col justify-center items-center mb-3 gap-y-2 max-w-7xl mx-auto">
+      <p class="border border-zinc-300/20 rounded-xl px-3 py-2 text-sm font-style text-zinc-400 mx-2 md:mx-0">
         <i class="fa-regular fa-circle-question"></i>
         本網站每 10 分鐘會自動更新 YTM 庫存資訊，相關資訊歸屬於<a target="_blank" href="https://www.yannick.com.tw/"
           class="text-yannick hover:underline font-title">亞尼克</a>官方。
@@ -169,12 +176,12 @@
 
     <div class="flex flex-col gap-2 fixed bottom-4 right-4">
       <a v-if="!isTop" href="#"
-        class="flex items-center justify-center rounded-full transition-all delay-100 bg-yannick text-zinc-200 w-[2rem] h-[2rem] group gap-1 hover:bg-yannick/80">
+        class="flex items-center justify-center rounded-full transition-all delay-100 bg-yannick text-zinc-200 w-8 h-8 group gap-1 hover:bg-yannick/80">
         <i class="fa-solid fa-arrow-up-long"></i>
       </a>
       <a href="https://ko-fi.com/luswdev" target="_blank"
-        class="flex items-center justify-center rounded-full transition-all delay-100 bg-yannick text-zinc-200 w-[2rem] h-[2rem] group hover:w-auto hover:px-3 gap-1">
-        <img src="https://storage.ko-fi.com/cdn/cup-border.png" alt="ko-fi" class="h-[1rem]">
+        class="flex items-center justify-center rounded-full transition-all delay-100 bg-yannick text-zinc-200 w-8 h-8 group hover:w-auto hover:px-3 gap-1">
+        <img src="https://storage.ko-fi.com/cdn/cup-border.png" alt="ko-fi" class="h-4">
         <span class="font-semibold hidden group-hover:inline-block">贊助我們</span>
       </a>
     </div>
