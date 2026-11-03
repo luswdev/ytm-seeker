@@ -16,6 +16,11 @@ const footerVue = createApp({
       isTop: true
     }
   },
+  methods: {
+    smooth2Top: function () {
+      window.scrollTo({top: 0, behavior: 'smooth'})
+    },
+  },
   mounted: function () {
     this.isTop = window.scrollY <= 0
     window.addEventListener('scroll', () => {

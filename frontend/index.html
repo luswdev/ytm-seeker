@@ -187,11 +187,11 @@
     </div>
 
     <div class="flex flex-col items-end gap-2 fixed bottom-4 right-4">
-      <a v-if="!isTop" href="#"
+      <span v-if="!isTop" @click="smooth2Top"
         class="flex items-center justify-center rounded-full transition-all delay-50 bg-yannick text-zinc-200 w-8 h-8 group hover:w-auto hover:px-3 gap-1 hover:bg-yannick/80">
         <i class="fa-solid fa-arrow-up-long"></i>
         <span class="font-semibold hidden group-hover:inline-block">回到頁首</span>
-      </a>
+      </span>
       <a v-if="!isTop" href="https://www.yannick.com.tw/ytm/service2" target="_blank"
         class="flex items-center justify-center rounded-full transition-all delay-50 bg-yannick text-zinc-200 w-8 h-8 group hover:w-auto hover:px-3 gap-1">
         <i class="fa-solid fa-cart-shopping"></i>
