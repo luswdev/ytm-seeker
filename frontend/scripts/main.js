@@ -12,7 +12,7 @@ const footerVue = createApp({
   data: function () {
     return {
       year: new Date().getFullYear(),
-      version: '1.1.5',
+      version: '1.1.6',
       isTop: true
     }
   },
@@ -95,6 +95,14 @@ const mainVue = createApp({
       } else {
         Cookies.remove('productFilter')
       }
+    },
+    resetProductFilter: function () {
+      this.products.forEach((prod) => {
+        prod.enable = false
+      })
+
+      this.updateList()
+      Cookies.remove('regionFilter')
     },
     resetFilters: function () {
       this.region = 'all'
@@ -260,6 +268,13 @@ const mainVue = createApp({
     },
     groupedRegions: function () {
       return this.regionList.filter(item => item.group)
+    },
+    filterProduct: function () {
+      let productFilter = this.products.find((prod) => prod.enable)
+      if (productFilter) {
+        return productFilter.name
+      }
+      return ''
     }
   },
   mounted: function () {
