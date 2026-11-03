@@ -12,7 +12,7 @@ const footerVue = createApp({
   data: function () {
     return {
       year: new Date().getFullYear(),
-      version: '1.2.0',
+      version: '1.2.1',
       isTop: true
     }
   },
@@ -128,6 +128,10 @@ const mainVue = createApp({
       Cookies.remove('productFilter')
     },
     getProductStyle: function (key) {
+      if (!this.isFilterProduct(key)) {
+        return 'bg-zinc-800 border-zinc-800 text-zinc-500'
+      }
+
       let target = this.products.find((prod) => prod.key === key)
       if (!target) {
         return 'bg-zinc-300 border-zinc-300 text-zinc-800'
@@ -162,6 +166,14 @@ const mainVue = createApp({
       }
 
       return ''
+    },
+    isFilterProduct: function (product) {
+      let productFilter = this.products.find((prod) => prod.enable)
+      if (productFilter) {
+        return productFilter.key === product
+      } else {
+        return true
+      }
     },
     getUpdated: function () {
       let date = new Date(this.updated * 1000)
@@ -285,7 +297,7 @@ const mainVue = createApp({
         return productFilter.name
       }
       return ''
-    }
+    },
   },
   beforeMount: function () {
     let width = window.innerWidth
