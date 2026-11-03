@@ -97,9 +97,25 @@
               <span class="font-semibold">篩選範圍</span>
               <select class="w-full rounded-lg bg-zinc-800 text-zinc-300 px-2 py-1" v-model="region">
                 <option value="all">全部</option>
-                <option value="tpe-mrt">台北捷運</option>
-                <option value="kh-mrt">高雄捷運</option>
-                <option value="direct">門市</option>
+                <optgroup label="台北捷運">
+                  <option value="tpe-mrt">台北捷運-全線</option>
+                  <option value="tpe-mrt/bannan">台北捷運-板南線</option>
+                  <option value="tpe-mrt/wenhu">台北捷運-文湖線</option>
+                  <option value="tpe-mrt/tamsui-xinyi">台北捷運-淡水信義線</option>
+                  <option value="tpe-mrt/zhonghe-xinlu">台北捷運-中和新蘆線</option>
+                  <option value="tpe-mrt/songshan-xindian">台北捷運-松山新店線</option>
+                  <option value="tpe-mrt/circular">台北捷運-環狀線</option>
+                </optgroup>
+                <optgroup label="高雄捷運">
+                  <option value="kh-mrt">高雄捷運-全線</option>
+                  <option value="kh-mrt/red">高雄捷運-紅線</option>
+                </optgroup>
+                <optgroup label="門市">
+                  <option value="direct">全台門市</option>
+                  <option value="direct/northern">北區門市</option>
+                  <option value="direct/central">中區門市</option>
+                  <option value="direct/southern">南區門市</option>
+                </optgroup>
               </select>
             </div>
             <div class="flex gap-1">

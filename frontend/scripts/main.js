@@ -123,6 +123,15 @@ const mainVue = createApp({
         case 'direct':
           this.resloveYtms = this.ytms.filter(ytm => ytm.region === this.region)
           break;
+        default:
+          mainRegion = this.region.split('/')[0]
+          subRegion = this.region.split('/')[1]
+          if (!subRegion) {
+            this.resloveYtms = this.ytms
+            break;
+          }
+
+          this.resloveYtms = this.ytms.filter(ytm => ytm.region === mainRegion && ytm.subRegion === subRegion)
       }
 
       if (!this.showEmptyYTM) {
