@@ -154,7 +154,11 @@
       <div class="map-modal-inner flex justify-center items-center mx-2 md:mx-0">
         <div
           class="flex flex-col gap-2 px-5 py-4 border border-zinc-300/20 rounded-lg bg-zinc-900 shadow-[0_0_40px] shadow-gray-500/25">
-          <h2 class="text-3xl font-title font-bold">{{ showMapYtm ? showMapYtm.name : '' }}</h2>
+          <h2 class="flex gap-2 items-center text-3xl font-title font-bold">
+            <img v-if="getMrtIcon(showMapYtm.name)" :src="getMrtIcon(showMapYtm.name)" class="inline-block w-7 h-7">
+            <img v-else src="/assets/icons/yannick.svg" class="inline-block w-7 h-7">
+            {{ showMapYtm ? showMapYtm.name : '' }}
+          </h2>
           <span class="flex justify-end">
             <a :href="showMapYtm ? 'https://www.google.com/maps/search/?api=1&query=' + showMapYtm.google_map : ''"
               target="_blank" class="text-sm text-zinc-300 underline hover:text-yannick cursor-pointer flex gap-1">
