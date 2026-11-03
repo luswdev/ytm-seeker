@@ -162,6 +162,18 @@ def detect_ytm_generation(ytm):
         else:
             return 0
 
+def gen_google_map_url(ytm):
+    if ytm['region'] == 'tpe-mrt':
+        station = ytm['name'].split('-', 1)[1]
+        query = f'台北捷運 {station}'
+    elif ytm['region'] == 'kh-mrt':
+        station = ytm['name'].split('-', 1)[1]
+        query = f'高雄捷運 {station}'
+    elif ytm['region'] == 'direct':
+        query = f'亞尼克 {ytm["name"]}'
+
+    return query
+
 def get_stock(ytm):
     buffer = BytesIO()
 
@@ -191,6 +203,8 @@ def main():
     for ytm in ytms:
         ytm['ytm_gen'] = detect_ytm_generation(ytm)
         logging.info(f'{ytm["name"]} is gen-{ytm["ytm_gen"]}')
+
+        ytm['google_map'] = gen_google_map_url(ytm)
 
         logging.info(f'get {ytm["name"]} stock...')
         stocks = get_stock(ytm)

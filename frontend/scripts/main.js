@@ -12,7 +12,7 @@ const footerVue = createApp({
   data: function () {
     return {
       year: new Date().getFullYear(),
-      version: '1.1.2',
+      version: '1.1.3',
       isTop: true
     }
   },
