@@ -138,7 +138,10 @@ def detect_ytm_generation(ytm):
         ytm_abbr = ytm['abbr']
         prefix = '門市'
     else:
-        ytm_abbr = ytm['name'].split('-')[1]
+        if 'abbr' in ytm.keys():
+            ytm_abbr = ytm['abbr']
+        else:
+            ytm_abbr = ytm['name'].split('-')[1]
         prefix = '1-捷運路線圖'
 
     if len(ytm_abbr):

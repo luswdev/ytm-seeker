@@ -204,7 +204,7 @@ const mainVue = createApp({
         case 'tpe-mrt':
         case 'kh-mrt':
           prefix = '1-捷運路線圖'
-          abbr = ytm.name.split('-')[1]
+          abbr = ytm.abbr ?? ytm.name.split('-')[1]
           break;
         case 'direct':
           prefix = '門市'
