@@ -43,7 +43,11 @@
         <h2 class="flex items-center gap-1 font-bold font-serif text-2xl">
           <span>查詢範圍:</span>
           <img v-if="filterRegionIcon" :src="'/assets/icons/' + filterRegionIcon" class="inline-block w-5 h-5">
-          <span class="text-xl">{{filterRegion}}</span>
+          <span class="text-xl" :class="this.region !== 'all' ? 'underline cursor-pointer hover:text-yannick' : null"
+            @click="resetRegionFilter">
+            {{filterRegion}}
+            <span v-if="this.region !== 'all'">×</span>
+          </span>
           <div class="flex justify-center items-center rounded-full w-6 h-6 hover:bg-yannick/80 hover:text-zinc-200"
             :class="showFilter ? 'bg-yannick text-zinc-200 ' : 'text-zinc-500 bg-zinc-800 '"
             @click="triggerFilterBlock">

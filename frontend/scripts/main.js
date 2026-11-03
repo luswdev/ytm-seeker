@@ -96,6 +96,11 @@ const mainVue = createApp({
         Cookies.remove('productFilter')
       }
     },
+    resetRegionFilter: function () {
+      this.region = 'all'
+      this.updateList()
+      Cookies.remove('regionFilter')
+    },
     resetProductFilter: function () {
       this.products.forEach((prod) => {
         prod.enable = false
