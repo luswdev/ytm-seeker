@@ -53,7 +53,11 @@ const mainVue = createApp({
       target.enable = !target.enable
       this.updateList()
 
-      Cookies.set('productFilter', key)
+      if (target.enable) {
+        Cookies.set('productFilter', key)
+      } else {
+        Cookies.remove('productFilter')
+      }
     },
     resetFilters: function () {
       this.region = 'all'
