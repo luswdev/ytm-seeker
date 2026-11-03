@@ -12,7 +12,7 @@ const footerVue = createApp({
   data: function () {
     return {
       year: new Date().getFullYear(),
-      version: '1.1.3',
+      version: '1.1.4',
       isTop: true
     }
   },
@@ -155,12 +155,14 @@ const mainVue = createApp({
         case 'kh-mrt':
           prefix = '1-捷運路線圖'
           abbr = ytm.name.split('-')[1]
+          break;
         case 'direct':
           prefix = '門市'
           abbr = ytm.abbr
+          break;
       }
 
-      if (ytm.abbr) {
+      if (abbr) {
         switch (ytm.ytm_gen) {
           case 1:
             return encodeURI(`https://photo.yannick.com.tw/0.YTM查詢-${prefix}-${abbr}.jpg`)
