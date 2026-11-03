@@ -55,13 +55,13 @@
         <div class="flex flex-col md:grid! md:grid-cols-4! gap-2 grow">
           <div class="flex flex-col gap-3 px-2 py-3 grow" :class="showFilter ? 'col-span-3' : 'col-span-4' ">
             <div v-if="!resloveYtms.length" class="flex flex-col gap-5 justify-center items-center grow">
-              <span class="font-title text-8xl text-zinc-600">:(</span>
+              <span class="font-title text-8xl text-yannick">:(</span>
               <span class="font-style">沒有符合條件的 YTM</span>
               <span class="text-sm text-zinc-600 border-1 border-zinc-300/20 rounded-full cursor-pointer hover:text-yannick hover:border-yannick px-3 py-2" @click="resetFilters">清除篩選條件</span>
             </div>
             <div v-for="ytm in resloveYtms" class="bg-zinc-900 rounded-lg p-2">
               <h2 class="font-serif text-xl font-bold flex gap-1 items-center">
-                <img v-if="getMrtIcon(ytm.name)" :src="getMrtIcon(ytm.name)" class="inline-block w-5 h-5 mr-1">
+                <img v-if="getMrtIcon(ytm.name)" :src="getMrtIcon(ytm.name)" class="inline-block w-5 h-5">
                 <i v-else class="fa-solid fa-store text-zinc-400"></i>
                 {{ytm.name}}
               </h2>
@@ -70,8 +70,9 @@
                 <span class="text-xs text-zinc-500 underline hover:text-yannick cursor-pointer" @click="showMapModal(ytm)">顯示地圖</span>
               </div>
               <div class="remain-container flex flex-wrap gap-1 mt-3">
-                <div v-if="!ytm.stocks.length" class="font-style text-zinc-300">
-                  本站沒有庫存!
+                <div v-if="!ytm.stocks.length" class="flex gap-2 font-style text-zinc-300">
+                  這台 YTM 沒有生乳捲了
+                  <span class="font-title font-semibold text-yannick">:(</span>
                 </div>
                 <span v-for="stock in ytm.stocks">
                   <span :class="getProductStyle(stock.key)" class="rounded-full text-sm px-2">
