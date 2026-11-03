@@ -107,7 +107,7 @@ const mainVue = createApp({
       })
 
       this.updateList()
-      Cookies.remove('regionFilter')
+      Cookies.remove('productFilter')
     },
     resetFilters: function () {
       this.region = 'all'
