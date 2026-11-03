@@ -36,6 +36,43 @@ const mainVue = createApp({
       showFilter: true,
       showMap: false,
       showMapYtm: undefined,
+      inDetailRegion: false,
+      regionList: [
+        {
+          group: undefined,
+          regions: [
+            { name: '所有 YTM', value: 'all' },
+          ],
+        },
+        {
+          group: '台北捷運',
+          regions: [
+            { name: '台北捷運-全線', value: 'tpe-mrt', icon: 'tpe-mrt/brand.svg' },
+            { name: '台北捷運-板南線', value: 'tpe-mrt/bannan', icon: 'tpe-mrt/bl.svg' },
+            { name: '台北捷運-文湖線', value: 'tpe-mrt/wenhu', icon: 'tpe-mrt/br.svg' },
+            { name: '台北捷運-淡水信義線', value: 'tpe-mrt/tamsui-xinyi', icon: 'tpe-mrt/r.svg' },
+            { name: '台北捷運-中和新蘆線', value: 'tpe-mrt/zhonghe-xinlu', icon: 'tpe-mrt/o.svg' },
+            { name: '台北捷運-松山新店線', value: 'tpe-mrt/songshan-xindian', icon: 'tpe-mrt/g.svg' },
+            { name: '台北捷運-環狀線', value: 'tpe-mrt/circular', icon: 'tpe-mrt/y.svg' },
+          ],
+        },
+        {
+          group: '高雄捷運',
+          regions: [
+            { name: '高雄捷運-全線', value: 'kh-mrt', icon: 'kh-mrt/brand.svg' },
+            { name: '高雄捷運-紅線', value: 'kh-mrt/red', icon: 'kh-mrt/r.svg' },
+          ],
+        },
+        {
+          group: '門市',
+          regions: [
+            { name: '全台門市', value: 'direct', icon: 'yannick.svg' },
+            { name: '北區門市', value: 'direct/northern', icon: 'yannick.svg' },
+            { name: '中區門市', value: 'direct/central', icon: 'yannick.svg' },
+            { name: '南區門市', value: 'direct/southern', icon: 'yannick.svg' },
+          ],
+        },
+      ]
     }
   },
   methods: {
@@ -114,13 +151,16 @@ const mainVue = createApp({
       return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`
     },
     updateList: function () {
+      this.inDetailRegion = false
+
       switch (this.region) {
         case 'all':
           this.resloveYtms = this.ytms
           break;
+        case 'direct':
+          this.inDetailRegion = true
         case 'tpe-mrt':
         case 'kh-mrt':
-        case 'direct':
           this.resloveYtms = this.ytms.filter(ytm => ytm.region === this.region)
           break;
         default:
@@ -131,6 +171,7 @@ const mainVue = createApp({
             break;
           }
 
+          this.inDetailRegion = true
           this.resloveYtms = this.ytms.filter(ytm => ytm.region === mainRegion && ytm.subRegion === subRegion)
       }
 
@@ -204,6 +245,21 @@ const mainVue = createApp({
     showEmptyYTM: function (newVal) {
       this.updateList()
       Cookies.set('showEmptyYTM', newVal)
+    }
+  },
+  computed: {
+    filterRegion: function () {
+      return this.regionList
+        .flatMap(group => group.regions)
+        .find(r => r.value === this.region)?.name || ''
+    },
+    filterRegionIcon: function () {
+      return this.regionList
+        .flatMap(group => group.regions)
+        .find(r => r.value === this.region)?.icon || ''
+    },
+    groupedRegions: function () {
+      return this.regionList.filter(item => item.group)
     }
   },
   mounted: function () {

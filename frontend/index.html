@@ -39,16 +39,23 @@
 
   <main class="grow flex" id="main">
     <div class="main-inner container flex flex-col">
-      <div class="flex justify-end gap-2 px-2">
-        <div v-if="resloveYtms.length" class="flex justify-end text-zinc-500 text-sm font-style">
-          <span>
-            一共有 {{resloveYtms.length}} 台 YTM 符合條件
-          </span>
-        </div>
-        <div
-          class="flex justify-center items-center rounded-full w-[1.5rem] h-[1.5rem] hover:bg-yannick/80 hover:text-zinc-200"
-          :class="showFilter ? 'bg-yannick text-zinc-200 ' : 'text-zinc-500 bg-zinc-800 '" @click="triggerFilterBlock">
-          <i class="fa-solid fa-gear"></i>
+      <div class="flex flex-col gap-2 px-2">
+        <h2 class="flex items-center gap-1 font-bold font-serif text-2xl">
+          <span>搜尋範圍:</span>
+          <img v-if="filterRegionIcon" :src="'/assets/icons/' + filterRegionIcon" class="inline-block w-5 h-5">
+          <span class="text-xl">{{filterRegion}}</span>
+        </h2>
+        <div class="flex gap-2">
+          <div v-if="resloveYtms.length" class="flex justify-end text-zinc-500 text-sm font-style">
+            <span>
+              一共有 {{resloveYtms.length}} 台 YTM 符合條件
+            </span>
+          </div>
+          <div
+            class="flex justify-center items-center rounded-full w-[1.5rem] h-[1.5rem] hover:bg-yannick/80 hover:text-zinc-200"
+            :class="showFilter ? 'bg-yannick text-zinc-200 ' : 'text-zinc-500 bg-zinc-800 '" @click="triggerFilterBlock">
+            <i class="fa-solid fa-gear"></i>
+          </div>
         </div>
       </div>
       <div class="flex grow">
@@ -61,8 +68,10 @@
             </div>
             <div v-for="ytm in resloveYtms" class="bg-zinc-900 rounded-lg p-2">
               <h2 class="font-serif text-xl font-bold flex gap-1 items-center">
-                <img v-if="getMrtIcon(ytm.name)" :src="getMrtIcon(ytm.name)" class="inline-block w-5 h-5">
-                <i v-else class="fa-solid fa-store text-zinc-400"></i>
+                <span v-if="!inDetailRegion" class="flex itmes-center">
+                  <img v-if="getMrtIcon(ytm.name)" :src="getMrtIcon(ytm.name)" class="inline-block w-5 h-5">
+                  <img v-else src="/assets/icons/yannick.svg" class="inline-block w-5 h-5">
+                </span>
                 {{ytm.name}}
               </h2>
               <div class="flex gap-1">
@@ -95,26 +104,14 @@
             </h3>
             <div class="region-filter flex flex-col gap-1">
               <span class="font-semibold">篩選範圍</span>
-              <select class="w-full rounded-lg bg-zinc-800 text-zinc-300 px-2 py-1" v-model="region">
-                <option value="all">全部</option>
-                <optgroup label="台北捷運">
-                  <option value="tpe-mrt">台北捷運-全線</option>
-                  <option value="tpe-mrt/bannan">台北捷運-板南線</option>
-                  <option value="tpe-mrt/wenhu">台北捷運-文湖線</option>
-                  <option value="tpe-mrt/tamsui-xinyi">台北捷運-淡水信義線</option>
-                  <option value="tpe-mrt/zhonghe-xinlu">台北捷運-中和新蘆線</option>
-                  <option value="tpe-mrt/songshan-xindian">台北捷運-松山新店線</option>
-                  <option value="tpe-mrt/circular">台北捷運-環狀線</option>
-                </optgroup>
-                <optgroup label="高雄捷運">
-                  <option value="kh-mrt">高雄捷運-全線</option>
-                  <option value="kh-mrt/red">高雄捷運-紅線</option>
-                </optgroup>
-                <optgroup label="門市">
-                  <option value="direct">全台門市</option>
-                  <option value="direct/northern">北區門市</option>
-                  <option value="direct/central">中區門市</option>
-                  <option value="direct/southern">南區門市</option>
+              <select class="w-full rounded-lg bg-zinc-800 text-zinc-300 px-2 py-1" v-model="region" ref="regionSelect">
+                <option v-for="r in regionList[0].regions" :key="r.value" :value="r.value">
+                    {{ r.name }}
+                </option>
+                <optgroup v-for="item in groupedRegions" :key="item.group" :label="item.group">
+                  <option v-for="r in item.regions" :key="r.value" :value="r.value">
+                    {{ r.name }}
+                  </option>
                 </optgroup>
               </select>
             </div>
