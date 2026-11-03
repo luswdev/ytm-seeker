@@ -77,9 +77,11 @@
                 {{ytm.name}}
               </h2>
               <div class="flex gap-1">
-                <span v-if="ytm.address" class="text-xs text-zinc-500">{{ytm.address}}</span>
-                <span class="text-xs text-zinc-500 underline hover:text-yannick cursor-pointer"
-                  @click="showMapModal(ytm)">顯示地圖</span>
+                <span v-if="ytm.address" class="text-xs text-zinc-500 underline hover:text-yannick cursor-pointer"
+                  @click="showMapModal(ytm)">
+                  <i class="fa-solid fa-magnifying-glass text-xs scale-75"></i>
+                  {{ytm.address}}
+                </span>
               </div>
               <div class="remain-container flex flex-wrap gap-1 mt-3">
                 <div v-if="!ytm.stocks.length" class="flex gap-2 font-style text-zinc-300">
@@ -174,17 +176,19 @@
       </p>
     </div>
 
-    <div class="flex flex-col gap-2 fixed bottom-4 right-4">
+    <div class="flex flex-col items-end gap-2 fixed bottom-4 right-4">
       <a v-if="!isTop" href="#"
-        class="flex items-center justify-center rounded-full transition-all delay-100 bg-yannick text-zinc-200 w-8 h-8 group gap-1 hover:bg-yannick/80">
+        class="flex items-center justify-center rounded-full transition-all delay-50 bg-yannick text-zinc-200 w-8 h-8 group hover:w-auto hover:px-3 gap-1 hover:bg-yannick/80">
         <i class="fa-solid fa-arrow-up-long"></i>
+        <span class="font-semibold hidden group-hover:inline-block">回到頁首</span>
       </a>
       <a v-if="!isTop" href="https://www.yannick.com.tw/ytm/service2" target="_blank"
-        class="flex items-center justify-center rounded-full transition-all delay-100 bg-yannick text-zinc-200 w-8 h-8 group hover:w-auto hover:px-3 gap-1">
+        class="flex items-center justify-center rounded-full transition-all delay-50 bg-yannick text-zinc-200 w-8 h-8 group hover:w-auto hover:px-3 gap-1">
         <i class="fa-solid fa-cart-shopping"></i>
+        <span class="font-semibold hidden group-hover:inline-block">手刀下訂</span>
       </a>
       <a href="https://ko-fi.com/luswdev" target="_blank"
-        class="flex items-center justify-center rounded-full transition-all delay-100 bg-yannick text-zinc-200 w-8 h-8 group hover:w-auto hover:px-3 gap-1">
+        class="flex items-center justify-center rounded-full transition-all delay-50 bg-yannick text-zinc-200 w-8 h-8 group hover:w-auto hover:px-3 gap-1">
         <img src="https://storage.ko-fi.com/cdn/cup-border.png" alt="ko-fi" class="h-4">
         <span class="font-semibold hidden group-hover:inline-block">贊助我們</span>
       </a>
