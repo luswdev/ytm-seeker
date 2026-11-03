@@ -12,7 +12,7 @@ const footerVue = createApp({
   data: function () {
     return {
       year: new Date().getFullYear(),
-      version: '1.0.3',
+      version: '1.1.2',
       isTop: true
     }
   },
@@ -144,16 +144,40 @@ const mainVue = createApp({
         return ''
       }
 
+      abbr = ''
+      prefix = ''
       switch (ytm.region) {
         case 'tpe-mrt':
-          line = ytm.name.split('-')[0]
-          station = ytm.name.split('-')[1]
-          switch (line) {
-            case '板南線':
-              return encodeURI(`https://photo.yannick.com.tw/0.YTM查詢-1-捷運路線圖-${station}.jpg`)
-            default:
-              return encodeURI(`https://photo.yannick.com.tw/photo/YTM2/0.YTM查詢-1-捷運路線圖-${station}.jpg`)
-          }
+        case 'kh-mrt':
+          prefix = '1-捷運路線圖'
+          abbr = ytm.name.split('-')[1]
+        case 'direct':
+          prefix = '門市'
+          abbr = ytm.abbr
+      }
+
+      if (ytm.abbr) {
+        switch (ytm.ytm_gen) {
+          case 1:
+            return encodeURI(`https://photo.yannick.com.tw/0.YTM查詢-${prefix}-${abbr}.jpg`)
+          case 2:
+            return encodeURI(`https://photo.yannick.com.tw/photo/YTM2/0.YTM查詢-${prefix}-${abbr}.jpg`)
+          case 3:
+            return encodeURI(`https://photo.yannick.com.tw/photo/YTM2/0.YTM查詢-${prefix}-${abbr}-01.jpg`)
+          case 4:
+            return encodeURI(`https://photo.yannick.com.tw/photo/YTM2/0.YTM查詢-${prefix}-2${abbr}-01.jpg`)
+          case 5:
+            return encodeURI(`https://photo.yannick.com.tw/photo/0.YTM查詢-${prefix}-${abbr}.jpg`)
+          default:
+          case 6:
+            return encodeURI(`https://photo.yannick.com.tw/photo/YTM2/0.YTM查詢-${prefix}-${abbr}- 中文-01.jpg`)
+        }
+      } else {
+        switch (ytm.ytm_gen) {
+          default:
+          case 1:
+            return encodeURI(`https://photo.yannick.com.tw/0.YTM查詢-${prefix}.jpg`)
+        }
       }
     },
   },
