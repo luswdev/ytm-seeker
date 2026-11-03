@@ -12,7 +12,7 @@ const footerVue = createApp({
   data: function () {
     return {
       year: new Date().getFullYear(),
-      version: '1.1.4',
+      version: '1.1.5',
       isTop: true
     }
   },
@@ -279,5 +279,11 @@ const mainVue = createApp({
     }
 
     this.updateList()
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' || e.key === 'Esc') {
+        this.closeMapModal()
+      }
+    })
   },
 }).mount('#main')
