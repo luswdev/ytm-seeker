@@ -1,6 +1,7 @@
 #!/bin/bash -e
 
 if [ -z "$1" ]; then
+  echo "start ytm api seeking..."
   . ./.venv/bin/activate
   ./ytm-api.py
   deactivate

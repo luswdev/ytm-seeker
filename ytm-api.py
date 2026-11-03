@@ -111,6 +111,8 @@ known_products = [
     dict( name='三顆布丁', key='31Z021368', style='bg-amber-500 border-amber-500 text-zinc-800', enable=False ),
 ]
 
+products = []
+
 API='https://www.yannick.com.tw/_zh-cht/ajaxTYTMStock.ashx'
 
 def url_exists(url):
@@ -177,6 +179,26 @@ def gen_google_map_url(ytm):
 
     return query
 
+def detect_new_product(product):
+    is_new_product = not any(
+        prod['key'] == product['commodityCode']
+        for prod in products
+    )
+
+    if is_new_product:
+        logging.info(f'new product: {product["commodityName"]}')
+        matches = (x for x in known_products if x['key'] == product['commodityCode'])
+        match = next(matches, None)
+        if match:
+            products.append(match)
+        else:
+            products.append(dict(
+                name = product['commodityName'],
+                key = product['commodityCode'],
+                style = 'bg-zinc-700 border-zinc-700 text-zinc-300',
+                enable = False,
+            ))
+
 def get_stock(ytm):
     buffer = BytesIO()
 
@@ -193,7 +215,7 @@ def get_stock(ytm):
 
     body = buffer.getvalue()
     data = json.loads(body.decode('utf-8'))
-    return data
+    return data['Result']['StockList']
 
 def main():
     logging.basicConfig(
@@ -201,18 +223,17 @@ def main():
         level  = logging.INFO,
     )
 
-    products = []
-
     for ytm in ytms:
         ytm['ytm_gen'] = detect_ytm_generation(ytm)
         logging.info(f'{ytm["name"]} is gen-{ytm["ytm_gen"]}')
 
         ytm['google_map'] = gen_google_map_url(ytm)
 
-        logging.info(f'get {ytm["name"]} stock...')
         stocks = get_stock(ytm)
+        logging.info(f'{ytm["name"]} got {len(stocks)} stock(s)')
+
         ytm['stocks'] = []
-        for stock in stocks['Result']['StockList']:
+        for stock in stocks:
             item = dict(
               name = stock['commodityName'],
               real_name = stock['ProductName'],
@@ -220,35 +241,20 @@ def main():
               quantity = stock['quantity'],
             )
             ytm['stocks'].append(item)
+            detect_new_product(stock)
 
-            is_new_product = not any(
-                prod['key'] == stock['commodityCode']
-                for prod in products
-            )
-
-            if is_new_product:
-                matches = (x for x in known_products if x['key'] == stock['commodityCode'])
-                match = next(matches, None)
-                if match:
-                    products.append(match)
-                else:
-                    products.append(dict(
-                        name = stock['commodityName'],
-                        key = stock['commodityCode'],
-                        style = 'bg-zinc-700 border-zinc-700 text-zinc-300',
-                        enable = False,
-                    ))
-
-                logging.info(f'new product: {stock["commodityName"]}')
-
+    logging.info('write ytms into ytm-stock.js')
     with open('frontend/scripts/ytm-stock.js', 'w', encoding='utf-8') as f:
         f.write('const YTMS = ')
         json.dump(ytms, f, ensure_ascii=False)
         f.write(f'\nconst UPDATED_AT = {datetime.datetime.now().timestamp()}')
 
+    logging.info('write products into ytm-products.js')
     with open('frontend/scripts/ytm-products.js', 'w', encoding='utf-8') as f:
         f.write('const PRODUCTS = ')
         json.dump(products, f, ensure_ascii=False)
+
+    logging.info('ytm api finished.')
 
 if __name__ == '__main__':
     main()
