@@ -32,6 +32,8 @@ const footerVue = createApp({
 const mainVue = createApp({
   data: function () {
     return {
+      timer: {},
+      now: Date.now(),
       ytms: YTMS,
       products: PRODUCTS,
       updated: UPDATED_AT,
@@ -175,11 +177,6 @@ const mainVue = createApp({
         return true
       }
     },
-    getUpdated: function () {
-      let date = new Date(this.updated * 1000)
-      let pad = (num) => String(num).padStart(2, '0')
-      return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`
-    },
     updateList: function () {
       this.inDetailRegion = false
 
@@ -298,6 +295,13 @@ const mainVue = createApp({
       }
       return ''
     },
+    getUpdated: function () {
+      let date = new Date(this.updated * 1000)
+      let pad = (num) => String(num).padStart(2, '0')
+      let diff = Math.round((this.now - date) / 1000)
+      let diffStr = diff >= 60 ? `${Math.round(diff / 60)} 分鐘前` : `${diff} 秒前`
+      return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())} (${diffStr})`
+    },
   },
   beforeMount: function () {
     let width = window.innerWidth
@@ -324,5 +328,9 @@ const mainVue = createApp({
         this.closeMapModal()
       }
     })
+
+    this.timer.updateNowTmr = setInterval(() => {
+      this.now = Date.now()
+    }, 200)
   },
 }).mount('#main')
