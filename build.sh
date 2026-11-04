@@ -7,6 +7,7 @@ if [ -z "$1" ]; then
   deactivate
 fi
 
+echo "generating output \"public\" directory..."
 mkdir -p public
 
 echo "[css] frontend/styles/main.css -> public/styles/main.min.css with tailwind minifying..."
@@ -31,3 +32,5 @@ version=$(date +%s)
 
 echo "[html] update version tag -> $version"
 sed "s/VER_TAG/$version/g" ./frontend/index.html > ./public/index.html
+
+echo "build done."
