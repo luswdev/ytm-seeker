@@ -34,11 +34,11 @@ const mainVue = createApp({
     return {
       timer: {},
       now: Date.now(),
-      ytms: YTMS,
-      products: PRODUCTS,
-      updated: UPDATED_AT,
+      ytms: {},
+      products: {},
+      updated: 0,
       showEmptyYTM: false,
-      resloveYtms: YTMS,
+      resloveYtms: {},
       region: 'all',
       showFilter: true,
       showMap: false,
@@ -83,6 +83,31 @@ const mainVue = createApp({
     }
   },
   methods: {
+    fetchYtmData: function () {
+      axios.get(`/assets/data/ytm-stock.json?v=${this.now}`)
+      .then((resp) => {
+        this.ytms = resp.data.ytms
+        this.updated = resp.data.updated
+        this.products = resp.data.products
+
+        this.fetchCookiesFilter()
+        this.updateList()
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+    },
+    fetchCookiesFilter: function () {
+      this.region = Cookies.get('regionFilter') ? Cookies.get('regionFilter') : 'all'
+      this.showEmptyYTM = Cookies.get('showEmptyYTM') === 'true'
+      let productFilter = Cookies.get('productFilter')
+      if (productFilter) {
+        let prod = this.products.find((p) => p.key === productFilter)
+        if (prod) {
+          prod.enable = true
+        }
+      }
+    },
     triggerFilterBlock: function () {
       this.showFilter = !this.showFilter
     },
@@ -304,23 +329,13 @@ const mainVue = createApp({
     },
   },
   beforeMount: function () {
+    this.fetchYtmData()
+
     let width = window.innerWidth
 
     if (width < 768) {
       this.showFilter = false
     }
-
-    this.region = Cookies.get('regionFilter') ? Cookies.get('regionFilter') : 'all'
-    this.showEmptyYTM = Cookies.get('showEmptyYTM') === 'true'
-    let productFilter = Cookies.get('productFilter')
-    if (productFilter) {
-      let prod = this.products.find((p) => p.key === productFilter)
-      if (prod) {
-        prod.enable = true
-      }
-    }
-
-    this.updateList()
   },
   mounted: function () {
     document.addEventListener('keydown', (e) => {
@@ -332,5 +347,9 @@ const mainVue = createApp({
     this.timer.updateNowTmr = setInterval(() => {
       this.now = Date.now()
     }, 200)
+
+    this.timer.updateDataTmr = setInterval(() => {
+      this.fetchYtmData()
+    }, 1000 * 60) // 1 min
   },
 }).mount('#main')

@@ -12,6 +12,12 @@ function gen_py_env () {
   deactivate
 }
 
+DIST_PATH=public
+
+echo "generating output \"${DIST_PATH}\" directory..."
+mkdir -vp $DIST_PATH
+mkdir -vp $DIST_PATH/assets/data
+
 # if no argument input, default build ytm api
 # otherwise, skip to generate frontend files
 if [ -z "$1" ]; then
@@ -22,14 +28,9 @@ if [ -z "$1" ]; then
 
   echo "start ytm api seeking..."
   . ./${VENV_PATH}/bin/activate
-  ./ytm-api.py
+  ./ytm-api.py "$DIST_PATH/assets/data"
   deactivate
 fi
-
-DIST_PATH=public
-
-echo "generating output \"${DIST_PATH}\" directory..."
-mkdir -p $DIST_PATH
 
 echo "[css] frontend/styles/main.css -> $DIST_PATH/styles/main.min.css with tailwind minifying..."
 tailwindcss-cli -i ./frontend/styles/main.css -o ./${DIST_PATH}/styles/main.min.css --minify --silent

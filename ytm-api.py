@@ -1,5 +1,6 @@
 #!./.venv/bin/python3
 
+import sys
 import pycurl
 import json
 from io import BytesIO
@@ -217,7 +218,7 @@ def get_stock(ytm):
     data = json.loads(body.decode('utf-8'))
     return data['Result']['StockList']
 
-def main():
+def main(output_path):
     logging.basicConfig(
         format = '%(levelname)s - %(message)s',
         level  = logging.INFO,
@@ -243,18 +244,21 @@ def main():
             ytm['stocks'].append(item)
             detect_new_product(stock)
 
-    logging.info('write ytms into ytm-stock.js')
-    with open('frontend/scripts/ytm-stock.js', 'w', encoding='utf-8') as f:
-        f.write('const YTMS = ')
-        json.dump(ytms, f, ensure_ascii=False)
-        f.write(f'\nconst UPDATED_AT = {datetime.datetime.now().timestamp()}')
-
-    logging.info('write products into ytm-products.js')
-    with open('frontend/scripts/ytm-products.js', 'w', encoding='utf-8') as f:
-        f.write('const PRODUCTS = ')
-        json.dump(products, f, ensure_ascii=False)
+    logging.info('write ytms/products into ytm-stock.json')
+    with open(f'{output_path}/ytm-stock.json', 'w', encoding='utf-8') as f:
+        out = dict(
+            updated = datetime.datetime.now().timestamp(),
+            products = products,
+            ytms = ytms,
+        )
+        json.dump(out, f, ensure_ascii=False)
 
     logging.info('ytm api finished.')
 
 if __name__ == '__main__':
-    main()
+    output_path = 'public'
+    if len(sys.argv) > 1:
+        output_path = sys.argv[1]
+
+    logging.info(f"output data into: {output_path}")
+    main(output_path)

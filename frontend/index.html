@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes" />
   <meta name="theme-color" content="#09090b" />
-  <meta name="keywords" content="YTM, 亞尼克, 盲盒, 生乳捲">
+  <meta name="keywords" content="YTM, YTM 查詢機, 亞尼克 YTM 查詢機, 亞尼克, 盲盒, 生乳捲">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png?v=1">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png?v=1">
@@ -17,6 +17,7 @@
 
   <script src="https://unpkg.com/vue@3.5.44/dist/vue.global.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.8/dist/js.cookie.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.21.0/dist/axios.min.js"></script>
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-SZ4ESZ8L1L"></script>
   <script src="scripts/gtag.js?v=_VER_TAG"></script>
@@ -202,7 +203,7 @@
     <div id="footer-inner" class="flex flex-col justify-center items-center mb-3 gap-y-2 max-w-7xl mx-auto">
       <p class="border border-zinc-300/20 rounded-xl px-3 py-2 text-sm font-style text-zinc-400 mx-2 md:mx-0">
         <i class="fa-regular fa-circle-question"></i>
-        本網站每 10 分鐘會自動更新 YTM 庫存資訊，相關資訊歸屬於<a target="_blank" href="https://www.yannick.com.tw/"
+        本網站會自動更新 YTM 庫存資料，相關資料歸屬於<a target="_blank" href="https://www.yannick.com.tw/"
           class="text-yannick hover:underline font-title">亞尼克</a>官方。
       </p>
       <p class="text-zinc-400/75 text-sm text-center font-mono">
@@ -237,8 +238,6 @@
     </div>
   </footer>
 
-  <script src="scripts/ytm-stock.min.js?v=_VER_TAG"></script>
-  <script src="scripts/ytm-products.min.js?v=_VER_TAG"></script>
   <script src="scripts/main.min.js?v=_VER_TAG"></script>
 </body>
 
