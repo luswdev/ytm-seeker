@@ -12,7 +12,7 @@ const footerVue = createApp({
   data: function () {
     return {
       year: new Date().getFullYear(),
-      version: '1.2.1',
+      version: '1.3.0',
       isTop: true
     }
   },
@@ -350,6 +350,6 @@ const mainVue = createApp({
 
     this.timer.updateDataTmr = setInterval(() => {
       this.fetchYtmData()
-    }, 1000 * 60) // 1 min
+    }, 1000 * 30) // 30 sec
   },
 }).mount('#main')

@@ -1,12 +1,15 @@
 #!./.venv/bin/python3
 
 import sys
+import time
 import pycurl
 import json
 from io import BytesIO
 from urllib.parse import urlencode, quote
 import datetime
 import logging
+
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 ytms = [
     # ytms in taipei mrt
@@ -111,8 +114,10 @@ known_products = [
     dict( name='BUBU切片組', key='31Z011082', style='bg-sky-700 border-sky-700 text-zinc-300', enable=False ),
     dict( name='三顆布丁', key='31Z021368', style='bg-amber-500 border-amber-500 text-zinc-800', enable=False ),
 ]
+known_products_map = {p['key']: p for p in known_products}
 
 products = []
+products_map = {p['key']: p for p in products}
 
 API='https://www.yannick.com.tw/_zh-cht/ajaxTYTMStock.ashx'
 
@@ -135,38 +140,33 @@ def url_exists(url):
         c.close()
 
 def detect_ytm_generation(ytm):
-    prefix = ''
-    ytm_abbr = ''
-    if (ytm['region'] == 'direct'):
-        ytm_abbr = ytm['abbr']
+    if ytm['region'] == 'direct':
         prefix = '門市'
+        abbr = ytm['abbr']
     else:
-        if 'abbr' in ytm.keys():
-            ytm_abbr = ytm['abbr']
-        else:
-            ytm_abbr = ytm['name'].split('-')[1]
         prefix = '1-捷運路線圖'
+        abbr = ytm.get('abbr') or ytm['name'].split('-')[1]
 
-    if len(ytm_abbr):
-        if (url_exists(f'https://photo.yannick.com.tw/0.YTM查詢-{prefix}-{ytm_abbr}.jpg')):
-            return 1
-        elif (url_exists(f'https://photo.yannick.com.tw/photo/YTM2/0.YTM查詢-{prefix}-{ytm_abbr}.jpg')):
-            return 2
-        elif (url_exists(f'https://photo.yannick.com.tw/photo/YTM2/0.YTM查詢-{prefix}-{ytm_abbr}-01.jpg')):
-            return 3
-        elif (url_exists(f'https://photo.yannick.com.tw/photo/YTM2/0.YTM查詢-{prefix}-2{ytm_abbr}-01.jpg')):
-            return 4
-        elif (url_exists(f'https://photo.yannick.com.tw/photo//0.YTM查詢-{prefix}-{ytm_abbr}.jpg')):
-            return 5
-        elif (url_exists(f'https://photo.yannick.com.tw/photo/YTM2/0.YTM查詢-{prefix}-{ytm_abbr}- 中文-01.jpg')):
-            return 6
-        else:
-            return 0
+    if abbr:
+        urls = [
+            f'0.YTM查詢-{prefix}-{abbr}.jpg',
+            f'photo/YTM2/0.YTM查詢-{prefix}-{abbr}.jpg',
+            f'photo/YTM2/0.YTM查詢-{prefix}-{abbr}-01.jpg',
+            f'photo/YTM2/0.YTM查詢-{prefix}-2{abbr}-01.jpg',
+            f'photo//0.YTM查詢-{prefix}-{abbr}.jpg',
+            f'photo/YTM2/0.YTM查詢-{prefix}-{abbr}- 中文-01.jpg',
+        ]
     else:
-        if (url_exists(f'https://photo.yannick.com.tw/0.YTM查詢-{prefix}.jpg')):
-            return 1
-        else:
-            return 0
+        urls = [
+            f'0.YTM查詢-{prefix}.jpg',
+        ]
+
+    base_url = 'https://photo.yannick.com.tw/'
+    for generation, path in enumerate(urls, start=1):
+        if url_exists(base_url + path):
+            return generation
+
+    return 0
 
 def gen_google_map_url(ytm):
     if ytm['region'] == 'tpe-mrt':
@@ -181,24 +181,21 @@ def gen_google_map_url(ytm):
     return query
 
 def detect_new_product(product):
-    is_new_product = not any(
-        prod['key'] == product['commodityCode']
-        for prod in products
-    )
+    key = product['commodityCode']
 
-    if is_new_product:
+    if key not in products_map:
         logging.info(f'new product: {product["commodityName"]}')
-        matches = (x for x in known_products if x['key'] == product['commodityCode'])
-        match = next(matches, None)
-        if match:
-            products.append(match)
-        else:
-            products.append(dict(
-                name = product['commodityName'],
-                key = product['commodityCode'],
-                style = 'bg-zinc-700 border-zinc-700 text-zinc-300',
-                enable = False,
-            ))
+
+        match = known_products_map.get(key)
+
+        products.append(match if match else dict(
+            name=product['commodityName'],
+            key=key,
+            style='bg-zinc-700 border-zinc-700 text-zinc-300',
+            enable=False,
+        ))
+
+        products_map[key] = products[-1]
 
 def get_stock(ytm):
     buffer = BytesIO()
@@ -210,39 +207,81 @@ def get_stock(ytm):
     post_data = { 'TID': ytm['key'] }
     postfields = urlencode(post_data)
     c.setopt(c.POSTFIELDS, postfields)
+    c.setopt(c.CONNECTTIMEOUT, 10)
+    c.setopt(c.TIMEOUT, 30)
+    c.setopt(c.FOLLOWLOCATION, 1)
 
     c.perform()
+    status = c.getinfo(c.RESPONSE_CODE)
     c.close()
+
+    if status != 200:
+        logging.warning(f'[{ytm["name"]}] get stock failed ({status})!')
+        return None
 
     body = buffer.getvalue()
     data = json.loads(body.decode('utf-8'))
     return data['Result']['StockList']
 
-def main(output_path):
-    logging.basicConfig(
-        format = '%(levelname)s - %(message)s',
-        level  = logging.INFO,
-    )
-
-    for ytm in ytms:
-        ytm['ytm_gen'] = detect_ytm_generation(ytm)
-        logging.info(f'{ytm["name"]} is gen-{ytm["ytm_gen"]}')
-
-        ytm['google_map'] = gen_google_map_url(ytm)
-
+def get_stock_retry(ytm, retries=3):
+    for attempt in range(retries):
         stocks = get_stock(ytm)
-        logging.info(f'{ytm["name"]} got {len(stocks)} stock(s)')
 
-        ytm['stocks'] = []
-        for stock in stocks:
-            item = dict(
-              name = stock['commodityName'],
-              real_name = stock['ProductName'],
-              key = stock['commodityCode'],
-              quantity = stock['quantity'],
-            )
-            ytm['stocks'].append(item)
-            detect_new_product(stock)
+        if all(
+            'commodityName' in stock
+            for stock in stocks
+        ):
+            return stocks
+
+        logging.warning(
+            f'[{ytm["name"]}] invalid response, retry {attempt + 1}/{retries}'
+        )
+        time.sleep(1)
+
+    return stocks
+
+def main(output_path):
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        futures = {
+            executor.submit(detect_ytm_generation, ytm): (ytm, 'generation')
+            for ytm in ytms
+        }
+
+        futures.update({
+            executor.submit(get_stock_retry, ytm): (ytm, 'stocks')
+            for ytm in ytms
+        })
+
+        for future in as_completed(futures):
+            ytm, task = futures[future]
+
+            try:
+                result = future.result()
+
+                if task == 'generation':
+                    ytm['ytm_gen'] = result
+                    logging.info(f'{ytm["name"]} is gen-{result}')
+
+                elif task == 'stocks':
+                    ytm['google_map'] = gen_google_map_url(ytm)
+                    logging.info(f'{ytm["name"]} got {len(result)} stock(s)')
+
+                    ytm['stocks'] = []
+                    for stock in result:
+                        item = dict(
+                            name=stock['commodityName'],
+                            real_name=stock['ProductName'],
+                            key=stock['commodityCode'],
+                            quantity=stock['quantity'],
+                        )
+                        ytm['stocks'].append(item)
+                        detect_new_product(stock)
+
+            except Exception:
+                logging.exception(f'{ytm["name"]} failed: {task}, stop ytm api.')
+                for f in futures:
+                    f.cancel()
+                raise
 
     logging.info('write ytms/products into ytm-stock.json')
     with open(f'{output_path}/ytm-stock.json', 'w', encoding='utf-8') as f:
@@ -256,6 +295,11 @@ def main(output_path):
     logging.info('ytm api finished.')
 
 if __name__ == '__main__':
+    logging.basicConfig(
+        format = '%(levelname)s - %(message)s',
+        level  = logging.INFO,
+    )
+
     output_path = 'public'
     if len(sys.argv) > 1:
         output_path = sys.argv[1]
