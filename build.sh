@@ -49,6 +49,9 @@ done
 echo "[resource] copy assets..."
 cp -varf frontend/assets public
 
+echo "[resource] copy seo files..."
+cp -varf frontend/robots.txt frontend/sitemap.xml $DIST_PATH
+
 version=$(date +%s)
 
 echo "[html] update version tag -> $version"
