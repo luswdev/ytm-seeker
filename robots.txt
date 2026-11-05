@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ytm.lusw.dev/sitemap.xml
+
