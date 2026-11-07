@@ -12,7 +12,7 @@ const footerVue = createApp({
   data: function () {
     return {
       year: new Date().getFullYear(),
-      version: '1.3.0',
+      version: '1.3.1',
       isTop: true
     }
   },
@@ -156,12 +156,12 @@ const mainVue = createApp({
     },
     getProductStyle: function (key) {
       if (!this.isFilterProduct(key)) {
-        return 'bg-zinc-800 border-zinc-800 text-zinc-500'
+        return 'bg-zinc-300 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-800 text-zinc-500'
       }
 
       let target = this.products.find((prod) => prod.key === key)
       if (!target) {
-        return 'bg-zinc-300 border-zinc-300 text-zinc-800'
+        return 'bgbg-zinc-300 border-zinc-300 text-zinc-800'
       }
       return target.style
     },

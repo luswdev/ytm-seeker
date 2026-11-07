@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-TW" class="dark">
+<html lang="zh-TW">
 
 <head>
   <title>亞尼克 YTM 查詢機</title>
@@ -26,7 +26,7 @@
 </head>
 
 <body
-  class="flex flex-col gap-3 min-h-screen bg-zinc-100 dark:bg-neutral-950 text-black dark:text-white max-w-4xl mx-auto">
+  class="flex flex-col gap-3 min-h-screen bg-zinc-100 dark:bg-zinc-950 text-zinc-900 dark:text-white max-w-4xl mx-auto">
   <header id="header">
     <div class="header-inner mt-3">
       <div class="flex justify-between items-baseline px-3 md:px-0">
@@ -56,13 +56,13 @@
             </span>
           </span>
           <div class="flex justify-center items-center rounded-full w-6 h-6 hover:bg-yannick/80 hover:text-zinc-200"
-            :class="showFilter ? 'bg-yannick text-zinc-200 ' : 'text-zinc-500 bg-zinc-800 '"
+            :class="showFilter ? 'bg-yannick text-zinc-200 ' : 'text-zinc-400 dark:text-zinc-500 bg-zinc-300 dark:bg-zinc-800 '"
             @click="triggerFilterBlock">
             <i class="fa-solid fa-gear text-sm"></i>
           </div>
         </h2>
         <div class="flex gap-2">
-          <span v-if="filterProduct" class="text-sm text-zinc-600 cursor-pointer hover:text-yannick underline"
+          <span v-if="filterProduct" class="text-sm text-zinc-400 dark:text-zinc-600 cursor-pointer hover:text-yannick underline"
             @click="resetProductFilter">
             {{filterProduct}} ×
           </span>
@@ -78,10 +78,10 @@
               <span class="font-title text-8xl text-yannick">:(</span>
               <span class="font-style">沒有符合條件的 YTM</span>
               <span
-                class="text-sm text-zinc-600 border border-zinc-300/20 rounded-full cursor-pointer hover:text-yannick hover:border-yannick px-3 py-2"
+                class="text-sm text-zinc-500 dark:text-zinc-600 border border-zinc-600/80 dark:border-zinc-300/20 rounded-full cursor-pointer hover:text-yannick hover:border-yannick px-3 py-2"
                 @click="resetFilters">清除篩選條件</span>
             </div>
-            <div v-for="ytm in resloveYtms" class="bg-zinc-900 rounded-lg p-2">
+            <div v-for="ytm in resloveYtms" class="dark:bg-zinc-900 bg-zinc-200 rounded-lg p-2">
               <h2 class="font-serif text-xl font-bold flex gap-1 items-center">
                 <span v-if="!inDetailRegion" class="flex itmes-center">
                   <img v-if="getMrtIcon(ytm.name)" :src="getMrtIcon(ytm.name)" class="inline-block w-5 h-5">
@@ -109,7 +109,7 @@
                 </span>
               </div>
             </div>
-            <div class="flex gap-1 items-center justify-end text-zinc-600 text-sm">
+            <div class="flex gap-1 items-center justify-end text-zinc-400 dark:text-zinc-600 text-sm">
               <i class="fa-regular fa-clock"></i>
               <span>最後更新於 {{getUpdated}}</span>
             </div>
@@ -129,7 +129,7 @@
               </h3>
               <div class="region-filter flex flex-col gap-1">
                 <span class="font-semibold">篩選範圍</span>
-                <select class="w-full rounded-lg bg-zinc-800 text-zinc-300 px-2 py-1" v-model="region" ref="regionSelect">
+                <select class="w-full rounded-lg bg-zinc-300 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 px-2 py-1" v-model="region" ref="regionSelect">
                   <option v-for="r in regionList[0].regions" :key="r.value" :value="r.value">
                     {{ r.name }}
                   </option>
@@ -142,20 +142,20 @@
               </div>
               <div class="flex gap-1">
                 <input type="checkbox" name="showEmptyYTM" value="showEmptyYTM" v-model="showEmptyYTM">
-                <label for="showEmptyYTM" class="text-sm text-zinc-300">顯示 0 庫存的 YTM</label>
+                <label for="showEmptyYTM" class="text-sm text-zinc-600 dark:text-zinc-300">顯示 0 庫存的 YTM</label>
               </div>
               <div class="option-filter flex flex-col gap-1 mt-3">
                 <span class="font-semibold">篩選口味</span>
                 <div class="flex flex-wrap gap-1 mt-2">
                   <span v-for="prod in products" class="rounded-full text-sm px-2 cursor-pointer border"
-                    :class="prod.enable ? prod.style + ' hover:border-red-700 hover:bg-zinc-900 hover:text-red-700' : 'border-zinc-300/20 text-zinc-300/20 hover:border-yannick hover:text-yannick' "
+                    :class="prod.enable ? prod.style + ' hover:border-red-700 hover:bg-white dark:hover:bg-zinc-900 hover:text-red-700' : 'border-zinc-600/60 dark:border-zinc-300/60 text-zinc-600/60 dark:text-zinc-300/60 hover:border-yannick hover:text-yannick' "
                     @click="triggerProductFilter(prod.key)">
                     {{prod.name}}
                   </span>
                 </div>
               </div>
               <div class="flex justify-end">
-                <span class="text-sm text-zinc-600 cursor-pointer hover:text-yannick underline"
+                <span class="text-sm text-zinc-400 dark:text-zinc-600 cursor-pointer hover:text-yannick underline"
                   @click="resetFilters">清除篩選條件</span>
               </div>
             </div>
@@ -201,12 +201,12 @@
 
   <footer id="footer">
     <div id="footer-inner" class="flex flex-col justify-center items-center mb-3 gap-y-2 max-w-7xl mx-auto">
-      <p class="border border-zinc-300/20 rounded-xl px-3 py-2 text-sm font-style text-zinc-400 mx-2 md:mx-0">
+      <p class="border border-zinc-600/20 dark:border-zinc-300/20 rounded-xl px-3 py-2 text-sm font-style text-zinc-500 dark:text-zinc-400 mx-2 md:mx-0">
         <i class="fa-regular fa-circle-question"></i>
         本網站會自動更新 YTM 庫存資料，相關資料歸屬於<a target="_blank" href="https://www.yannick.com.tw/"
           class="text-yannick hover:underline font-title">亞尼克</a>官方。
       </p>
-      <p class="text-zinc-400/75 text-sm text-center font-mono">
+      <p class="text-zinc-600/75 dark:text-zinc-400/75 text-sm text-center font-mono">
         &copy {{ year }} LuSkywalker v{{version}}.
       </p>
     </div>
