@@ -169,7 +169,7 @@
       enter-to-class="opacity-100" leave-active-class="transition-opacity duration-200" leave-from-class="opacity-100"
       leave-to-class="opacity-0">
       <div v-if="showMap"
-        class="popup-container map-modal fixed top-0 left-0 w-full h-full inset-0 z-50 overflow-y-auto overflow-x-hidden bg-black/80 backdrop-blur-sm flex justify-center items-center"
+        class="popup-container map-modal fixed top-0 left-0 w-full h-full inset-0 z-50 overflow-y-auto overflow-x-hidden bg-white/80 dark:bg-black/80 backdrop-blur-sm flex justify-center items-center"
         @click="closeMapModal">
         <Transition appear enter-active-class="transition-all duration-300 ease-out"
           enter-from-class="opacity-0 scale-75 translate-y-4" enter-to-class="opacity-100 scale-100 translate-y-0"
@@ -177,7 +177,7 @@
           leave-from-class="opacity-100 scale-100 translate-y-0" leave-to-class="opacity-0 scale-75 translate-y-4">
           <div class="popup-content map-modal-inner flex justify-center items-center mx-2 md:mx-0">
             <div
-              class="flex flex-col gap-2 px-5 py-4 border border-zinc-300/20 rounded-lg bg-zinc-900 shadow-[0_0_40px] shadow-gray-500/25">
+              class="flex flex-col gap-2 px-5 py-4 border border-zinc-600/20 dark:border-zinc-300/20 rounded-lg bg-zinc-200 dark:bg-zinc-900 shadow-[0_0_40px] shadow-gray-500/25">
               <h2 class="flex gap-2 items-center text-3xl font-title font-bold">
                 <img v-if="getMrtIcon(showMapYtm.name)" :src="getMrtIcon(showMapYtm.name)" class="inline-block w-7 h-7">
                 <img v-else src="/assets/icons/yannick.svg" class="inline-block w-7 h-7">
@@ -185,14 +185,14 @@
               </h2>
               <span class="flex justify-end">
                 <a :href="showMapYtm ? 'https://www.google.com/maps/search/?api=1&query=' + showMapYtm.google_map : ''"
-                  target="_blank" class="text-sm text-zinc-300 underline hover:text-yannick cursor-pointer flex gap-1">
+                  target="_blank" class="text-sm text-zinc-600 dark:text-zinc-300 underline hover:text-yannick cursor-pointer flex gap-1">
                   <img src="/assets/icons/google-map.svg" class="inline-block w-5 h-5">
                   在 Google Map 中打開
                 </a>
               </span>
               <img :src="getYtmMap(showMapYtm)" :alt="showMapYtm ? (showMapYtm.name + '地圖') : '' "
                 class="w-lg rounded-md">
-              <span class="text-xs text-zinc-500 underline hover:text-yannick cursor-pointer text-center"
+              <span class="text-xs text-zinc-400 dark:text-zinc-500 underline hover:text-yannick cursor-pointer text-center"
                 @click="closeMapModal">× 關閉</span>
             </div>
           </div>
