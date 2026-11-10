@@ -6,6 +6,11 @@ const headerVue = createApp({
     return {
     }
   },
+  methods: {
+    smooth2Top: function () {
+      window.scrollTo({top: 0, behavior: 'smooth'})
+    },
+  },
 }).mount('#header')
 
 const footerVue = createApp({
@@ -41,6 +46,7 @@ const mainVue = createApp({
       resloveYtms: {},
       region: 'all',
       showFilter: true,
+      showFilterMobile: false,
       showMap: false,
       showMapYtm: undefined,
       inDetailRegion: false,
@@ -110,6 +116,7 @@ const mainVue = createApp({
     },
     triggerFilterBlock: function () {
       this.showFilter = !this.showFilter
+      this.showFilterMobile = this.showFilter
     },
     triggerProductFilter: function (key) {
       this.products.forEach((prod) => {
