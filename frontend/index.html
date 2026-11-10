@@ -71,9 +71,47 @@
           </span>
         </div>
       </div>
-      <div class="flex grow">
+      <div class="flex flex-col grow">
+        <div v-if="showFilter"
+          class="md:hidden flex flex-col gap-2 px-2 py-3 border border-zinc-500/20 rounded-md mx-2 mt-2 shadow-[0_0_40px] shadow-gray-500/25">
+          <h3 class="text-2xl font-bold">
+            <i class="fa-solid fa-gear text-zinc-500 mb-2"></i>
+            進階篩選
+          </h3>
+          <div class="region-filter flex flex-col gap-1">
+            <span class="font-semibold">篩選範圍</span>
+            <select class="w-full rounded-lg bg-zinc-300 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 px-2 py-1" v-model="region" ref="regionSelect">
+              <option v-for="r in regionList[0].regions" :key="r.value" :value="r.value">
+                {{ r.name }}
+              </option>
+              <optgroup v-for="item in groupedRegions" :key="item.group" :label="item.group">
+                <option v-for="r in item.regions" :key="r.value" :value="r.value">
+                  {{ r.name }}
+                </option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="flex gap-1">
+            <input type="checkbox" name="showEmptyYTM" value="showEmptyYTM" v-model="showEmptyYTM">
+            <label for="showEmptyYTM" class="text-sm text-zinc-600 dark:text-zinc-300">顯示 0 庫存的 YTM</label>
+          </div>
+          <div class="option-filter flex flex-col gap-1 mt-3">
+            <span class="font-semibold">篩選口味</span>
+            <div class="flex flex-wrap gap-1 mt-2">
+              <span v-for="prod in products" class="rounded-full text-sm px-2 cursor-pointer border"
+                :class="prod.enable ? prod.style + ' hover:border-red-700 hover:bg-white dark:hover:bg-zinc-900 hover:text-red-700' : 'border-zinc-600/60 dark:border-zinc-300/60 text-zinc-600/60 dark:text-zinc-300/60 hover:border-yannick hover:text-yannick' "
+                @click="triggerProductFilter(prod.key)">
+                {{prod.name}}
+              </span>
+            </div>
+          </div>
+          <div class="flex justify-end">
+            <span class="text-sm text-zinc-400 dark:text-zinc-600 cursor-pointer hover:text-yannick underline"
+              @click="resetFilters">清除篩選條件</span>
+          </div>
+        </div>
         <div
-          class="grid gap-2 grow grid-cols-1 grid-rows-[1fr] transition-[grid-template-rows] duration-300 ease-in-out md:grid-cols-[1fr_0fr] md:grid-rows-1 md:transition-[grid-template-columns]"
+          class="grid gap-2 grow grid-rows-1"
           :class="showFilter ? 'md:grid-cols-[3fr_1fr]' : 'md:grid-cols-[1fr_0fr]'">
           <div class="min-w-0 flex flex-col gap-3 px-2 py-3 grow">
             <div v-if="!resloveYtms.length" class="flex flex-col gap-5 justify-center items-center grow">
@@ -83,7 +121,7 @@
                 class="text-sm text-zinc-500 dark:text-zinc-600 border border-zinc-600/80 dark:border-zinc-300/20 rounded-full cursor-pointer hover:text-yannick hover:border-yannick px-3 py-2"
                 @click="resetFilters">清除篩選條件</span>
             </div>
-            <div v-for="ytm in resloveYtms" class="dark:bg-zinc-900 bg-zinc-200 rounded-lg p-2">
+            <div v-for="ytm in resloveYtms" class="dark:bg-zinc-900 bg-zinc-200 border border-zinc-500/20 rounded-lg p-2">
               <h2 class="font-serif text-xl font-bold flex gap-1 items-center">
                 <span v-if="!inDetailRegion" class="flex itmes-center">
                   <img v-if="getMrtIcon(ytm.name)" :src="getMrtIcon(ytm.name)" class="inline-block w-5 h-5">
@@ -116,52 +154,44 @@
               <span>最後更新於 {{getUpdated}}</span>
             </div>
           </div>
-          <Transition
-            enter-active-class="transition-all duration-300 ease-out"
-            enter-from-class="opacity-0 translate-y-[-20px] md:translate-y-0 md:translate-x-[20px]"
-            enter-to-class="opacity-100 translate-x-0 translate-y-0"
-            leave-active-class="transition-all duration-200 ease-in"
-            leave-from-class="opacity-100 translate-x-0 translate-y-0"
-            leave-to-class="opacity-0 translate-y-[-20px] md:translate-y-0 md:translate-x-[20px]">
-            <div v-if="showFilter"
-              class="min-w-0 overflow-hidden px-2 py-3 flex flex-col gap-2 order-first md:order-last border border-zinc-300/20 md:border-0 mx-2 rounded-md md:mx-0 mt-2 md:mt-0 shadow-[0_0_40px] shadow-gray-500/25 md:shadow-none">
-              <h3 class="text-2xl font-bold">
-                <i class="fa-solid fa-gear text-zinc-500 mb-2"></i>
-                進階篩選
-              </h3>
-              <div class="region-filter flex flex-col gap-1">
-                <span class="font-semibold">篩選範圍</span>
-                <select class="w-full rounded-lg bg-zinc-300 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 px-2 py-1" v-model="region" ref="regionSelect">
-                  <option v-for="r in regionList[0].regions" :key="r.value" :value="r.value">
+          <div v-if="showFilter"
+            class="hidden md:flex flex-col gap-2 px-2 py-3">
+            <h3 class="text-2xl font-bold">
+              <i class="fa-solid fa-gear text-zinc-500 mb-2"></i>
+              進階篩選
+            </h3>
+            <div class="region-filter flex flex-col gap-1">
+              <span class="font-semibold">篩選範圍</span>
+              <select class="w-full rounded-lg bg-zinc-300 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 px-2 py-1" v-model="region" ref="regionSelect">
+                <option v-for="r in regionList[0].regions" :key="r.value" :value="r.value">
+                  {{ r.name }}
+                </option>
+                <optgroup v-for="item in groupedRegions" :key="item.group" :label="item.group">
+                  <option v-for="r in item.regions" :key="r.value" :value="r.value">
                     {{ r.name }}
                   </option>
-                  <optgroup v-for="item in groupedRegions" :key="item.group" :label="item.group">
-                    <option v-for="r in item.regions" :key="r.value" :value="r.value">
-                      {{ r.name }}
-                    </option>
-                  </optgroup>
-                </select>
-              </div>
-              <div class="flex gap-1">
-                <input type="checkbox" name="showEmptyYTM" value="showEmptyYTM" v-model="showEmptyYTM">
-                <label for="showEmptyYTM" class="text-sm text-zinc-600 dark:text-zinc-300">顯示 0 庫存的 YTM</label>
-              </div>
-              <div class="option-filter flex flex-col gap-1 mt-3">
-                <span class="font-semibold">篩選口味</span>
-                <div class="flex flex-wrap gap-1 mt-2">
-                  <span v-for="prod in products" class="rounded-full text-sm px-2 cursor-pointer border"
-                    :class="prod.enable ? prod.style + ' hover:border-red-700 hover:bg-white dark:hover:bg-zinc-900 hover:text-red-700' : 'border-zinc-600/60 dark:border-zinc-300/60 text-zinc-600/60 dark:text-zinc-300/60 hover:border-yannick hover:text-yannick' "
-                    @click="triggerProductFilter(prod.key)">
-                    {{prod.name}}
-                  </span>
-                </div>
-              </div>
-              <div class="flex justify-end">
-                <span class="text-sm text-zinc-400 dark:text-zinc-600 cursor-pointer hover:text-yannick underline"
-                  @click="resetFilters">清除篩選條件</span>
+                </optgroup>
+              </select>
+            </div>
+            <div class="flex gap-1">
+              <input type="checkbox" name="showEmptyYTM" value="showEmptyYTM" v-model="showEmptyYTM">
+              <label for="showEmptyYTM" class="text-sm text-zinc-600 dark:text-zinc-300">顯示 0 庫存的 YTM</label>
+            </div>
+            <div class="option-filter flex flex-col gap-1 mt-3">
+              <span class="font-semibold">篩選口味</span>
+              <div class="flex flex-wrap gap-1 mt-2">
+                <span v-for="prod in products" class="rounded-full text-sm px-2 cursor-pointer border"
+                  :class="prod.enable ? prod.style + ' hover:border-red-700 hover:bg-white dark:hover:bg-zinc-900 hover:text-red-700' : 'border-zinc-600/60 dark:border-zinc-300/60 text-zinc-600/60 dark:text-zinc-300/60 hover:border-yannick hover:text-yannick' "
+                  @click="triggerProductFilter(prod.key)">
+                  {{prod.name}}
+                </span>
               </div>
             </div>
-          </Transition>
+            <div class="flex justify-end">
+              <span class="text-sm text-zinc-400 dark:text-zinc-600 cursor-pointer hover:text-yannick underline"
+                @click="resetFilters">清除篩選條件</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
