@@ -17,7 +17,7 @@ const footerVue = createApp({
   data: function () {
     return {
       year: new Date().getFullYear(),
-      version: '1.3.1',
+      version: '1.3.2',
       isTop: true
     }
   },
@@ -37,6 +37,7 @@ const footerVue = createApp({
 const mainVue = createApp({
   data: function () {
     return {
+      init: false,
       timer: {},
       now: Date.now(),
       ytms: {},
@@ -44,7 +45,10 @@ const mainVue = createApp({
       updated: 0,
       showEmptyYTM: false,
       resloveYtms: {},
+      searchYtms: {},
       region: 'all',
+      ytmFilter: '',
+      ytmFilterSearchStr: '',
       showFilter: true,
       showFilterMobile: false,
       showMap: false,
@@ -98,6 +102,14 @@ const mainVue = createApp({
 
         this.fetchCookiesFilter()
         this.updateList()
+
+        if (!this.init) {
+          this.searchYtms = this.ytms.map((x) => x.name)
+          if (this.ytmFilterSearchStr) {
+            this.searchYtms = fuzzysort.go(this.ytmFilterSearchStr, this.ytms, { key: 'name' }).map((res) => res.obj.name)
+          }
+          this.init = 1
+        }
       })
       .catch((error) => {
         console.error(error)
@@ -113,10 +125,18 @@ const mainVue = createApp({
           prod.enable = true
         }
       }
+
+      if (!this.init) {
+        this.ytmFilter = this.ytmFilterSearchStr = Cookies.get('ytmFilter')
+      }
     },
     triggerFilterBlock: function () {
       this.showFilter = !this.showFilter
       this.showFilterMobile = this.showFilter
+
+      window.setTimeout(() => {
+        initFlowbite()
+      }, 0)
     },
     triggerProductFilter: function (key) {
       this.products.forEach((prod) => {
@@ -212,6 +232,12 @@ const mainVue = createApp({
     updateList: function () {
       this.inDetailRegion = false
 
+      if (this.ytmFilter) {
+        this.inDetailRegion = true
+        this.resloveYtms = this.ytms.filter(ytm => ytm.name === this.ytmFilter)
+        return
+      }
+
       switch (this.region) {
         case 'all':
           this.resloveYtms = this.ytms
@@ -304,7 +330,20 @@ const mainVue = createApp({
     showEmptyYTM: function (newVal) {
       this.updateList()
       Cookies.set('showEmptyYTM', newVal)
-    }
+    },
+    ytmFilterSearchStr: function (newVal) {
+      console.log('change')
+      if (newVal) {
+        this.searchYtms = fuzzysort.go(newVal, this.ytms, { key: 'name' }).map((res) => res.obj.name)
+      } else {
+        this.searchYtms = this.ytms.map((x) => x.name)
+      }
+      console.log(this.searchYtms)
+    },
+    ytmFilter: function (newVal) {
+      this.updateList()
+      Cookies.set('ytmFilter', newVal)
+    },
   },
   computed: {
     filterRegion: function () {
