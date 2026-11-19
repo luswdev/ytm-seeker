@@ -40,8 +40,8 @@ const mainVue = createApp({
       init: false,
       timer: {},
       now: Date.now(),
-      ytms: {},
-      products: {},
+      ytms: [],
+      products: [],
       updated: 0,
       showEmptyYTM: false,
       resloveYtms: {},
@@ -369,10 +369,15 @@ const mainVue = createApp({
     getUpdated: function () {
       let date = new Date(this.updated * 1000)
       let pad = (num) => String(num).padStart(2, '0')
-      let diff = Math.round((this.now - date) / 1000)
-      let diffStr = diff >= 60 ? `${Math.round(diff / 60)} 分鐘前` : `${diff} 秒前`
-      return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())} (${diffStr})`
+      // let diff = Math.round((this.now - date) / 1000)
+      // let diffStr = diff >= 60 ? `${Math.round(diff / 60)} 分鐘前` : `${diff} 秒前`
+      return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`
     },
+    isLive: function () {
+      let date = new Date(this.updated * 1000)
+      let diff = Math.round((this.now - date) / 1000)
+      return (diff < 60)
+    }
   },
   beforeMount: function () {
     this.fetchYtmData()

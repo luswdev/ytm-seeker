@@ -26,7 +26,7 @@
   <script src="https://cdn.jsdelivr.net/npm/fuzzysort@3.1.0/fuzzysort.min.js"></script>
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-SZ4ESZ8L1L"></script>
-  <script src="scripts/gtag.js?v=_VER_TAG"></script>
+  <script src="scripts/gtag.min.js?v=_VER_TAG"></script>
 
   <link rel="stylesheet" href="/styles/main.min.css?v=_VER_TAG">
 </head>
@@ -105,7 +105,7 @@
                 </option>
               </optgroup>
             </select>
-            <input type="text" id="ytm-filter-mobile-input" class="w-full border rounded-lg border-zinc-500/20 outline-0 px-3 py-2" placeholder="搜尋 YTM"
+            <input type="text" id="ytm-filter-mobile-input" class="w-full border rounded-lg border-zinc-700/20 dark:border-zinc-300/20 outline-0 px-3 py-2" placeholder="搜尋 YTM"
               v-model="ytmFilterSearchStr" data-dropdown-toggle="ytms-mobile-dropdown" data-dropdown-placement="bottom-start">
             <div id="ytms-mobile-dropdown" class="z-10 hidden bg-zinc-200 dark:bg-zinc-900 border border-zinc-500/20 rounded-lg shadow-lg overflow-y-auto max-h-52">
               <ul class="py-2 text-zinc-700 dark:text-zinc-200" aria-labelledby="ytm-filter-mobile-input">
@@ -120,12 +120,12 @@
             <input type="checkbox" name="showEmptyYTM" value="showEmptyYTM" v-model="showEmptyYTM">
             <label for="showEmptyYTM" class="text-sm text-zinc-600 dark:text-zinc-300">顯示 0 庫存的 YTM</label>
           </div>
-          <hr class="border-zinc-500/20 -mx-2 my-1" />
+          <hr class="border-zinc-700/20 dark:border-zinc-300/20 -mx-2 my-1" />
           <div class="option-filter flex flex-col gap-1">
             <span class="font-semibold">篩選口味</span>
             <div class="flex flex-wrap gap-1 mt-2">
               <span v-for="prod in products" class="rounded-full text-sm px-2 cursor-pointer border"
-                :class="prod.enable ? prod.style + ' hover:border-red-700 hover:bg-white dark:hover:bg-zinc-900 hover:text-red-700' : 'border-zinc-600/60 dark:border-zinc-300/60 text-zinc-600/60 dark:text-zinc-300/60 hover:border-yannick hover:text-yannick' "
+                :class="prod.enable ? prod.style + ' hover:border-red-700 hover:bg-white dark:hover:bg-zinc-900 hover:text-red-700' : 'border-zinc-700/20 dark:border-zinc-300/20 text-zinc-600/60 dark:text-zinc-300/60 hover:border-yannick hover:text-yannick' "
                 @click="triggerProductFilter(prod.key)">
                 {{prod.name}}
               </span>
@@ -176,8 +176,17 @@
               </div>
             </div>
             <div class="flex gap-1 items-center justify-end text-zinc-400 dark:text-zinc-600 text-sm">
-              <i class="fa-regular fa-clock"></i>
-              <span>最後更新於 {{getUpdated}}</span>
+              <div class="border border-zinc-700/20 dark:border-zinc-300/20 rounded-full px-2 py-1 flex items-center gap-1">
+                <span class="relative flex size-3">
+                  <span class="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
+                    :class="isLive ? 'bg-lime-500 dark:bg-green-800' : 'bg-red-500'">
+                  </span>
+                  <span class="relative inline-flex size-3 rounded-full"
+                    :class="isLive ? 'bg-lime-400 dark:bg-green-700' : 'bg-red-400'">
+                  </span>
+                </span>
+                <span>{{getUpdated}}</span>
+              </div>
             </div>
           </div>
           <div v-if="showFilter"
@@ -194,7 +203,7 @@
                   </option>
                 </optgroup>
               </select>
-              <input type="text" id="ytm-filter-input" class="w-full border rounded-lg border-zinc-500/20 outline-0 px-3 py-2" placeholder="搜尋 YTM"
+              <input type="text" id="ytm-filter-input" class="w-full border rounded-lg border-zinc-700/20 dark:border-zinc-300/20 outline-0 px-3 py-2" placeholder="搜尋 YTM"
                 v-model="ytmFilterSearchStr" data-dropdown-toggle="ytms-dropdown" data-dropdown-placement="bottom-start">
               <div id="ytms-dropdown" class="z-10 hidden bg-zinc-200 dark:bg-zinc-900 border border-zinc-500/20 rounded-lg shadow-lg overflow-y-auto max-h-52">
                 <ul class="py-2 text-zinc-700 dark:text-zinc-200" aria-labelledby="ytm-filter-input">
@@ -209,12 +218,12 @@
               <input type="checkbox" name="showEmptyYTM" value="showEmptyYTM" v-model="showEmptyYTM">
               <label for="showEmptyYTM" class="text-sm text-zinc-600 dark:text-zinc-300">顯示 0 庫存的 YTM</label>
             </div>
-            <hr class="border-zinc-500/20 my-2"/>
+            <hr class="border-zinc-700/20 dark:border-zinc-300/20 my-2"/>
             <div class="option-filter flex flex-col gap-1">
               <span class="font-semibold">篩選口味</span>
               <div class="flex flex-wrap gap-1">
                 <span v-for="prod in products" class="rounded-full text-sm px-2 cursor-pointer border"
-                  :class="prod.enable ? prod.style + ' hover:border-red-700 hover:bg-white dark:hover:bg-zinc-900 hover:text-red-700' : 'border-zinc-600/60 dark:border-zinc-300/60 text-zinc-600/60 dark:text-zinc-300/60 hover:border-yannick hover:text-yannick' "
+                  :class="prod.enable ? prod.style + ' hover:border-red-700 hover:bg-white dark:hover:bg-zinc-900 hover:text-red-700' : 'border-zinc-700/20 dark:border-zinc-300/20 text-zinc-600/60 dark:text-zinc-300/60 hover:border-yannick hover:text-yannick' "
                   @click="triggerProductFilter(prod.key)">
                   {{prod.name}}
                 </span>
@@ -266,12 +275,9 @@
 
   <footer id="footer">
     <div id="footer-inner" class="flex flex-col justify-center items-center mb-3 gap-y-2 max-w-7xl mx-auto">
-      <p class="border border-zinc-600/20 dark:border-zinc-300/20 rounded-xl px-3 py-2 text-sm font-style text-zinc-500 dark:text-zinc-400 mx-2 md:mx-0">
-        <i class="fa-regular fa-circle-question"></i>
+      <p class="text-zinc-400 dark:text-zinc-600 text-sm text-center font-mono">
         本網站會自動更新 YTM 庫存資料，相關資料歸屬於<a target="_blank" href="https://www.yannick.com.tw/"
-          class="text-yannick hover:underline font-title">亞尼克</a>官方。
-      </p>
-      <p class="text-zinc-600/75 dark:text-zinc-400/75 text-sm text-center font-mono">
+          class="text-yannick hover:underline font-title">亞尼克</a>官方。<br>
         &copy {{ year }} LuSkywalker v{{version}}
       </p>
     </div>
