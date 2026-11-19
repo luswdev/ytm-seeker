@@ -183,7 +183,7 @@ const mainVue = createApp({
     },
     getProductStyle: function (key) {
       if (!this.isFilterProduct(key)) {
-        return 'bg-zinc-300 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-800 text-zinc-500'
+        return 'bg-zinc-300 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-800 text-zinc-500 opacity-50'
       }
 
       let target = this.products.find((prod) => prod.key === key)
