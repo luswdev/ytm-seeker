@@ -5,7 +5,7 @@
   <title>亞尼克 YTM 查詢機</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes" />
-  <meta name="theme-color" content="#09090b" />
+  <meta name="theme-color" content="#18181b" />
   <meta name="keywords" content="YTM, YTM 查詢機, 亞尼克 YTM 查詢機, 亞尼克, 盲盒, 生乳捲">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png?v=1">
@@ -32,8 +32,8 @@
 </head>
 
 <body
-  class="flex flex-col gap-3 min-h-screen bg-zinc-100 dark:bg-zinc-950 text-zinc-900 dark:text-white max-w-4xl mx-auto">
-  <header id="header" class="fixed inset-x-0 max-w-4xl mx-auto bg-zinc-100/80 dark:bg-zinc-950/80 z-50 backdrop-blur-[5px] backdrop-saturate-200">
+  class="flex flex-col gap-3 min-h-screen bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-white max-w-4xl mx-auto">
+  <header id="header" class="fixed inset-x-0 max-w-4xl mx-auto bg-zinc-100/80 dark:bg-zinc-900/80 z-50 backdrop-blur-[5px] backdrop-saturate-200">
     <div class="header-inner my-3">
       <div class="flex justify-between items-baseline px-3 md:px-0">
         <h1 class="font-title font-black text-4xl cursor-pointer" @click="smooth2Top">
@@ -147,7 +147,7 @@
                 class="text-sm text-zinc-500 dark:text-zinc-600 border border-zinc-600/80 dark:border-zinc-300/20 rounded-full cursor-pointer hover:text-yannick hover:border-yannick px-3 py-2"
                 @click="resetFilters">清除篩選條件</span>
             </div>
-            <div v-for="ytm in resloveYtms" class="dark:bg-zinc-900 bg-zinc-200 border border-zinc-500/20 rounded-lg p-2">
+            <div v-for="ytm in resloveYtms" class="border border-zinc-700/20 dark:border-zinc-300/20  rounded-xl py-4 px-3">
               <h2 class="font-serif text-xl font-bold flex gap-1 items-center">
                 <span v-if="!inDetailRegion" class="flex itmes-center">
                   <img v-if="getMrtIcon(ytm.name)" :src="getMrtIcon(ytm.name)" class="inline-block w-5 h-5">
