@@ -402,10 +402,5 @@ const mainVue = createApp({
     this.timer.updateDataTmr = setInterval(() => {
       this.fetchYtmData()
     }, 1000 * 30) // 30 sec
-
-    const darkModeMql = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)')
-    if (!darkModeMql || !darkModeMql.matches) {
-      document.querySelector('meta[name="theme-color"]').setAttribute("content", "#fafafa");
-    }
   },
 }).mount('#main')
